@@ -7,5 +7,5 @@ module Campo.Minato {
     requires javafx.media;
     requires javafx.web;
     requires javafx.swt;
-    opens tommy.apllication.campo_minato;
+    opens tommy.apllication.campominato;
 }
