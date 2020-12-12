@@ -10,25 +10,33 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import tommy.apllication.gridandbox.Casella;
 import tommy.apllication.gridandbox.MatriceCampoMinato;
 
 public class CampoMinatoApplication extends Application {
 
     private MatriceCampoMinato matriceCampoMinato;
-    private int x= 10;
-    private int y = 10;
+    private int x= 5;
+    private int y = 5;
+    private int bombs = 5;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        matriceCampoMinato = new MatriceCampoMinato(x, y,0 );
+        matriceCampoMinato = new MatriceCampoMinato(x, y, bombs);
 
         Group grid = new Group();
         HBox hbox = new HBox();
-        for(int x = 0; x<this.x; x++)
-        {
-            hbox.getChildren().add(new VBox(generateNodes(x)));
-        }
+        for(int x = 0; x<this.x; x++) hbox.getChildren().add(new VBox(generateNodes(x)));
+
+        //FOR TESTING PURPOSE {
+        Button apritutto = new Button("ApriTutto");
+        apritutto.addEventFilter(MouseEvent.MOUSE_CLICKED, (mouseEvent)->{
+            for(MatriceCampoMinato.Casella[] m: matriceCampoMinato.getMatriceCampoMinato())
+                for(MatriceCampoMinato.Casella c: m)
+                    c.setText(String.valueOf(c.getStatus()));
+        });
+        hbox.getChildren().add(0, apritutto);
+        //FOR TESTING PURPOSE }
+
         grid.getChildren().add(hbox);
         primaryStage.setScene(new Scene(grid));
         primaryStage.show();
@@ -36,14 +44,12 @@ public class CampoMinatoApplication extends Application {
         System.out.println(matriceCampoMinato.toString());
     }
 
-    static int a = 0;
     public Node[] generateNodes(int x){
         Node[] list = new Node[this.y];
         for(int y = 0; y<this.y;y++)
         {
-            Casella casella = new Casella(a++);
-            list[y] = casella;
-            matriceCampoMinato.setCasella(y,x,casella);
+            //Casella casella = new Casella(0);
+            list[y] =matriceCampoMinato.setCasella(y,x);
         }
         return list;
     }
