@@ -1,12 +1,11 @@
 package tommy.apllication.gridandbox;
 
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.TextAlignment;
+import tommy.apllication.exception.BombException;
 
 import java.util.*;
 
@@ -21,43 +20,38 @@ public class MatriceCampoMinato {
         this.firstChoose=true;
     }
 
-    public boolean scopriCasella(int colonna, int riga){
+    public boolean scopriCasella(int colonna, int riga) throws BombException {
 
-        if(firstChoose) generateBombs(colonna, riga);
+        if(firstChoose) generateBombs(riga, colonna);
 
         Casella c = matriceCampoMinato[riga][colonna];
-        System.out.println("Y: "+c.getCoordinate().getY()+" X: "+c.getCoordinate().getX());
-        System.out.println("Y: "+riga+" X: "+colonna);
 
         if(c.getStatus()==0)
         {
-            //PASSO RICORSIVO TODO
             c.setDisable(true);
             c.setText(String.valueOf(c.getStatus()));
             Casella[] caselle = getsurroundingBoxes(colonna, riga);
             for(Casella casella: caselle)
                 if(casella!=null && !casella.isDisable())
-                {
-                    System.out.println("\tY:"+casella.getCoordinate().getY()+" X:"+casella.getCoordinate().getX());
                     scopriCasella(casella.getCoordinate().getX(), casella.getCoordinate().getY());
-                }
         }
-        else if(c.getStatus()>0){
+        else if(c.getStatus()>0)
+        {
             c.setText(String.valueOf(c.getStatus()));
             c.setDisable(true);
         }
+        else throw new BombException(c);
 
         return false;
     }
 
     public void generateBombs(int riga, int colonna){
-        System.out.println("X:"+colonna+"; Y:"+riga);
         firstChoose=false;
         //keep track of free spaces
         LinkedList<Coordinate> freeCoordinates = new LinkedList<>();
             for (int column = 0; column < matriceCampoMinato[0].length; column++)
                 for (int row = 0; row < matriceCampoMinato.length; row++)
-                    if (column != colonna || row != riga) freeCoordinates.add(new Coordinate(column, row));
+                    if (column != colonna || row != riga) freeCoordinates.add(new Coordinate(row, column));
 
         Collections.shuffle(freeCoordinates);
         int bombPlaced = 0;
@@ -178,7 +172,8 @@ public class MatriceCampoMinato {
         String toReturn ="";
         for(Casella[] caselle: matriceCampoMinato) {
             for (Casella casella : caselle)
-                toReturn += casella.getText()+"; ";
+                if(casella.isDisable()) toReturn += casella.getStatus()+"; ";
+                else toReturn+="@";
             toReturn+="\n";
         }
         return toReturn.substring(0, toReturn.length()-1);
@@ -187,8 +182,6 @@ public class MatriceCampoMinato {
     public class Casella extends Button {
         private int status;
         private double size = 35;
-        private boolean shown;
-        private boolean canBeShown = true;
         /**
          * X:Colonna
          * Y:Riga
@@ -204,35 +197,44 @@ public class MatriceCampoMinato {
             this.status=status;
 
             addEventFilter(MouseEvent.MOUSE_CLICKED, (mouseEvent) -> {
-                if (!shown)
                     switch (mouseEvent.getButton()) {
                         case PRIMARY: {
-                            if (canBeShown) {
-                                //setText(String.valueOf(status));
-                                shown = true;
-                                canBeShown = true;
+                            if(!getText().equals("?") && !getText().equals("F"))
+                            {
                                 setDisable(true);
-                                scopriCasella(coordinate.getX(),coordinate.getY());
+                                try
+                                {
+                                    scopriCasella(coordinate.getX(), coordinate.getY());
+                                }
+                                catch (BombException e)
+                                {
+                                    for (Casella[] caselle : matriceCampoMinato)
+                                        for (Casella cas : caselle)
+                                            if (!cas.isDisable())
+                                            {
+                                                if (cas.getStatus() < 0) cas.setStyle("-fx-background-color: #CD5C5C;");
+                                                else
+                                                {
+                                                    cas.setText(String.valueOf(cas.getStatus()));
+                                                    cas.setStyle("-fx-background-color: #B9B7A7;");
+                                                }
+                                                cas.setDisable(true);
+                                            }
+                                }
                             }
-
                         }; break;
 
                         case SECONDARY: {
-                            System.out.println("X:"+this.getCoordinate().getX()+" Y:"+getCoordinate().getY());
-                            if (getText().equals("F")) {
-                                setText("?");
-                                canBeShown = false;
-                            } else if (getText().equals("")) {
-                                setText("F");
-                                canBeShown = false;
-                            } else {
-                                setText("");
-                                canBeShown = true;
+                            //System.out.println("X:"+this.getCoordinate().getX()+" Y:"+getCoordinate().getY());
+                            switch (getText())
+                            {
+                                case "F": setText("?"); break;
+                                case "?": setText(""); break;
+                                default: setText("F"); break;
                             }
                         }; break;
                         default: break;
                     }
-                System.out.println("Ricorsione finita");
                 });
             setStyle("-fx-background-radius: 0");
             setTextFill(Color.BLACK);
@@ -248,7 +250,7 @@ public class MatriceCampoMinato {
 
         public void setStatus(int status){
             this.status=status;
-            if(status<0) setStyle("-fx-background-color: #CD5C5C;");
+            //if(status<0) setStyle("-fx-background-color: #CD5C5C;");
         }
 
         public void incrementStatus(){

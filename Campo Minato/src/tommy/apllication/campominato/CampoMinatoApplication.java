@@ -1,10 +1,8 @@
 package tommy.apllication.campominato;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -13,20 +11,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tommy.apllication.gridandbox.MatriceCampoMinato;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-
 public class CampoMinatoApplication extends Application {
 
     private MatriceCampoMinato matriceCampoMinato;
-    private int colonne= 5;
-    private int righe = 5;
-    private int bombs = 5;
+    private int colonne= 10;
+    private int righe = 12;
+    private int bombs = 22;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        matriceCampoMinato = new MatriceCampoMinato(colonne, righe, bombs);
+        matriceCampoMinato = new MatriceCampoMinato(righe, colonne, bombs);
 
         Group grid = new Group();
         HBox hbox = new HBox();
@@ -53,12 +47,7 @@ public class CampoMinatoApplication extends Application {
     public Node[] generateNodes(int x){
         Node[] list = new Node[this.righe];
         for(int y = 0; y<this.righe;y++)
-        {
-            //Casella casella = new Casella(0);
-            //System.out.println("X: "+x+ "; Y: "+y);
             list[y] =matriceCampoMinato.setCasella(x,y, 0);
-            //((MatriceCampoMinato.Casella)list[y]).setText("X:"+String.valueOf(x)+"-Y:"+String.valueOf(y));
-        }
         return list;
     }
 }
