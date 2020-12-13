@@ -1,31 +1,31 @@
 package tommy.apllication.gridandbox;
 
 public class Coordinate {
-    private int x;
-    private int y;
+    private int riga;
+    private int colonna;
 
-    public Coordinate(int x, int y){
-        this.x=x;
-        this.y=y;
+    public Coordinate(int riga, int colonna){
+        this.riga=riga;
+        this.colonna=colonna;
     }
 
 
     public int getX() {
-        return x;
+        return riga;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setX(int riga) {
+        this.riga = riga;
     }
 
     public int getY() {
-        return y;
+        return colonna;
     }
 
     public void setY(int y) {
-        this.y = y;
+        this.colonna = colonna;
     }
 
     @Override
-    public String toString(){return "X:"+x+"; Y:"+y;}
+    public String toString(){return "X:"+riga+"; Y:"+colonna;}
 }
