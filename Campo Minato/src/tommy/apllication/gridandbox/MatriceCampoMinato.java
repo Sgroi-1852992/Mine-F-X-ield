@@ -22,14 +22,14 @@ public class MatriceCampoMinato {
     }
 
     public boolean scopriCasella(int colonna, int riga){
-        //TODO
+
         if(firstChoose) generateBombs(colonna, riga);
 
         Casella c = matriceCampoMinato[riga][colonna];
         System.out.println("Y: "+c.getCoordinate().getY()+" X: "+c.getCoordinate().getX());
         System.out.println("Y: "+riga+" X: "+colonna);
 
-        if(c.getStatus()>=0)
+        if(c.getStatus()==0)
         {
             //PASSO RICORSIVO TODO
             c.setDisable(true);
@@ -39,12 +39,12 @@ public class MatriceCampoMinato {
                 if(casella!=null && !casella.isDisable())
                 {
                     System.out.println("\tY:"+casella.getCoordinate().getY()+" X:"+casella.getCoordinate().getX());
-                    scopriCasella(casella.getCoordinate().getY(), casella.getCoordinate().getX());
+                    scopriCasella(casella.getCoordinate().getX(), casella.getCoordinate().getY());
                 }
         }
-        else {
+        else if(c.getStatus()>0){
             c.setText(String.valueOf(c.getStatus()));
-            //c.setDisable(true);
+            c.setDisable(true);
         }
 
         return false;

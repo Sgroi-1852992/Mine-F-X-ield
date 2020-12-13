@@ -22,7 +22,7 @@ public class CampoMinatoApplication extends Application {
     private MatriceCampoMinato matriceCampoMinato;
     private int colonne= 5;
     private int righe = 5;
-    private int bombs = 1;
+    private int bombs = 5;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -57,7 +57,7 @@ public class CampoMinatoApplication extends Application {
             //Casella casella = new Casella(0);
             //System.out.println("X: "+x+ "; Y: "+y);
             list[y] =matriceCampoMinato.setCasella(x,y, 0);
-            ((MatriceCampoMinato.Casella)list[y]).setText("X:"+String.valueOf(x)+"-Y:"+String.valueOf(y));
+            //((MatriceCampoMinato.Casella)list[y]).setText("X:"+String.valueOf(x)+"-Y:"+String.valueOf(y));
         }
         return list;
     }

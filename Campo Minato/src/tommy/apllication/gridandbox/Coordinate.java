@@ -11,21 +11,21 @@ public class Coordinate {
 
 
     public int getX() {
-        return riga;
-    }
-
-    public void setX(int riga) {
-        this.riga = riga;
-    }
-
-    public int getY() {
         return colonna;
     }
 
-    public void setY(int y) {
+    public void setX(int colonna) {
         this.colonna = colonna;
     }
 
+    public int getY() {
+        return riga;
+    }
+
+    public void setY(int riga) {
+        this.riga = riga;
+    }
+
     @Override
-    public String toString(){return "X:"+riga+"; Y:"+colonna;}
+    public String toString(){return "X:"+colonna+"; Y:"+riga;}
 }
