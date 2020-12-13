@@ -6,13 +6,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import tommy.apllication.exception.BombException;
+import tommy.apllication.exception.WinException;
 
 import java.util.*;
 
 public class MatriceCampoMinato {
     private Casella[][] matriceCampoMinato;
-    private int bombs;
+    private int bombs, caselleScoperte;
     private boolean firstChoose;
+
 
     public MatriceCampoMinato(int righe, int colonne, int bombs){
         matriceCampoMinato = new Casella[righe][colonne];
@@ -20,7 +22,7 @@ public class MatriceCampoMinato {
         this.firstChoose=true;
     }
 
-    public boolean scopriCasella(int colonna, int riga) throws BombException {
+    public void scopriCasella(int colonna, int riga) throws BombException, WinException {
 
         if(firstChoose) generateBombs(riga, colonna);
 
@@ -29,7 +31,7 @@ public class MatriceCampoMinato {
         if(c.getStatus()==0)
         {
             c.setDisable(true);
-            c.setText(String.valueOf(c.getStatus()));
+            c.setText("");
             Casella[] caselle = getsurroundingBoxes(colonna, riga);
             for(Casella casella: caselle)
                 if(casella!=null && !casella.isDisable())
@@ -41,8 +43,12 @@ public class MatriceCampoMinato {
             c.setDisable(true);
         }
         else throw new BombException(c);
+        ++caselleScoperte;
+        if(checkWin()) throw new WinException();
+    }
 
-        return false;
+    public boolean checkWin(){
+        return caselleScoperte==(matriceCampoMinato[0].length* matriceCampoMinato.length - bombs);
     }
 
     public void generateBombs(int riga, int colonna){
@@ -219,6 +225,16 @@ public class MatriceCampoMinato {
                                                     cas.setStyle("-fx-background-color: #B9B7A7;");
                                                 }
                                                 cas.setDisable(true);
+                                            }
+                                }
+                                catch (WinException w)
+                                {
+                                    for (Casella[] caselle : matriceCampoMinato)
+                                        for (Casella cas : caselle)
+                                            if(cas.getStatus()<0)
+                                            {
+                                                cas.setDisable(true);
+                                                cas.setStyle("-fx-background-color: #7CFC00");
                                             }
                                 }
                             }
