@@ -14,7 +14,7 @@ public class CampoMinatoApplication extends Application {
     private MatriceCampoMinato matriceCampoMinato;
     private int colonne= 10;
     private int righe = 12;
-    private int bombs = 5;
+    private int bombs = 25;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -39,7 +39,7 @@ public class CampoMinatoApplication extends Application {
         primaryStage.setScene(new Scene(grid));
         primaryStage.show();
         primaryStage.setTitle("Campo Minato");
-        System.out.println(matriceCampoMinato.toString());
+        primaryStage.setResizable(false);
     }
 
     public Node[] generateNodes(int x){
