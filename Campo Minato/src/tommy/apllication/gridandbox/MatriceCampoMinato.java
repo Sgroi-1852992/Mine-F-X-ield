@@ -66,7 +66,7 @@ public class MatriceCampoMinato {
                             for(Casella c: getsurroundingBoxes(column, row))
                                 if(c!=null) c.incrementStatus();
                             bombPlaced++;
-                            System.out.println("A");
+                            //System.out.println("A");
                         }
                         else freeCoordinates.add(matriceCampoMinato[row][column].getCoordinate());
                     }
@@ -86,7 +86,7 @@ public class MatriceCampoMinato {
                         if(c!=null) c.incrementStatus();
                     toRemove.add(coordinate);
                     bombPlaced++;
-                    System.out.println("B");
+                    //System.out.println("B");
                 }
                 if(bombPlaced>=bombs) break;
             }
@@ -234,7 +234,7 @@ public class MatriceCampoMinato {
                                                 if (cas.getStatus() < 0) cas.setStyle("-fx-background-color: #CD5C5C;");
                                                 else
                                                 {
-                                                    cas.setText(String.valueOf(cas.getStatus()));
+                                                    if(cas.getStatus()>0) cas.setText(String.valueOf(cas.getStatus()));
                                                     cas.setStyle("-fx-background-color: #B9B7A7;");
                                                 }
                                                 cas.setDisable(true);
