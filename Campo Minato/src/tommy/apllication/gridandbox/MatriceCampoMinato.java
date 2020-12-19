@@ -53,14 +53,26 @@ public class MatriceCampoMinato {
 
     public void generateBombs(int riga, int colonna){
         firstChoose=false;
+        int bombPlaced = 0;
         //keep track of free spaces
         LinkedList<Coordinate> freeCoordinates = new LinkedList<>();
             for (int column = 0; column < matriceCampoMinato[0].length; column++)
                 for (int row = 0; row < matriceCampoMinato.length; row++)
-                    if (column != colonna || row != riga) freeCoordinates.add(new Coordinate(row, column));
+                    if (column != colonna || row != riga)
+                    {
+                        if(bombPlaced<bombs && Math.random()<=0.025)
+                        {
+                            matriceCampoMinato[row][column].setStatus(-1);
+                            for(Casella c: getsurroundingBoxes(column, row))
+                                if(c!=null) c.incrementStatus();
+                            bombPlaced++;
+                            System.out.println("A");
+                        }
+                        else freeCoordinates.add(matriceCampoMinato[row][column].getCoordinate());
+                    }
 
         Collections.shuffle(freeCoordinates);
-        int bombPlaced = 0;
+        if(bombPlaced<bombs)
         while(true)
         {
             ArrayList<Coordinate> toRemove = new ArrayList<>();
@@ -74,6 +86,7 @@ public class MatriceCampoMinato {
                         if(c!=null) c.incrementStatus();
                     toRemove.add(coordinate);
                     bombPlaced++;
+                    System.out.println("B");
                 }
                 if(bombPlaced>=bombs) break;
             }
@@ -274,7 +287,20 @@ public class MatriceCampoMinato {
                 status++;
         }
 
+         @Override
+        public boolean equals(Object o){
+             if (this == o) return true;
+             if (o == null || getClass() != o.getClass()) return false;
+             Casella that = (Casella) o;
+             return getCoordinate().equals(((Casella) o).getCoordinate()) && that.getStatus()==getStatus();
+         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(status, size, coordinate);
         }
+    }
+
     }
 
 

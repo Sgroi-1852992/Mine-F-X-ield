@@ -1,5 +1,7 @@
 package tommy.apllication.gridandbox;
 
+import java.util.Objects;
+
 public class Coordinate {
     private int riga;
     private int colonna;
@@ -24,6 +26,19 @@ public class Coordinate {
 
     public void setY(int riga) {
         this.riga = riga;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinate that = (Coordinate) o;
+        return riga == that.riga && colonna == that.colonna;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(riga, colonna);
     }
 
     @Override

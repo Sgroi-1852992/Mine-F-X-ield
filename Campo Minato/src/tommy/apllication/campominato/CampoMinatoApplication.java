@@ -19,6 +19,7 @@ public class CampoMinatoApplication extends Application {
     private MatriceCampoMinato matriceCampoMinato;
     private int colonne= 10;
     private int righe = 12;
+
     private int bombs = 5;
     private StackPane mainMenu;
 	private Stage primaryStage;
@@ -74,6 +75,7 @@ public class CampoMinatoApplication extends Application {
 
         grid.getChildren().add(hbox);
         primaryStage.setScene(new Scene(grid));
+
     	
     	return true;
     }
