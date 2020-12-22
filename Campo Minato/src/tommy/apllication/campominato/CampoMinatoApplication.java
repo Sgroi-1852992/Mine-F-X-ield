@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import tommy.apllication.gridandbox.MatriceCampoMinato;
+import tommy.apllication.menu.CustomGameMenu;
 
 public class CampoMinatoApplication extends Application {
 
@@ -25,38 +26,33 @@ public class CampoMinatoApplication extends Application {
 	private Stage primaryStage;
 	private Slider difficulty;
 
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage){
     	initMainMenu();
     	this.primaryStage = primaryStage;
         this.primaryStage.setScene(new Scene(mainMenu));
-    	this.primaryStage.show();
+    	//this.primaryStage.show();
     	this.primaryStage.setTitle("Campo Minato");
+    	this.primaryStage.setResizable(false);
+		primaryStage.show();
     }
-    
+
+
     /**
      * this code generates and runs the game
      * @return
      */
-    private boolean initGame() {
-    	switch((int)difficulty.getValue()) {
-    	case 1:
-    		bombs = 5;
-    		break;
-    	case 2:
-    		bombs = 9;
-    		break;
-    	case 3:
-    		bombs = 14;
-    		break;
-    	case 4:
-    		bombs = 20;
-    		break;
-    	default:
-    		bombs = 25;
-    		break;
-    	};
-    	matriceCampoMinato = new MatriceCampoMinato(righe, colonne, bombs);
+    public boolean initGame(boolean custom) {
+    	if(!custom)
+			switch((int)difficulty.getValue()) {
+			case 1: bombs = 5; break;
+			case 2: bombs = 9; break;
+			case 3: bombs = 14; break;
+			case 4: bombs = 20; break;
+			default: bombs = 25; break;
+			};
+    	matriceCampoMinato = new MatriceCampoMinato(righe, colonne, bombs ,this);
 
         Group grid = new Group();
         HBox hbox = new HBox();
@@ -75,7 +71,7 @@ public class CampoMinatoApplication extends Application {
 
         grid.getChildren().add(hbox);
         primaryStage.setScene(new Scene(grid));
-
+        System.out.println(grid);
     	
     	return true;
     }
@@ -87,7 +83,7 @@ public class CampoMinatoApplication extends Application {
     	mainMenu = new StackPane();
     	mainMenu.setMinSize(400, 350);
     	Button play = new Button("Play");
-    	play.setOnAction(e -> initGame());
+    	play.setOnAction(e -> initGame(false));
     	play.setTranslateY(20);
     	play.setScaleX(1.5);
     	play.setScaleY(1.5);
@@ -105,16 +101,24 @@ public class CampoMinatoApplication extends Application {
     	difficulty.setShowTickMarks(true);
     	difficulty.setShowTickLabels(true);
     	difficulty.setTranslateY(80);
+
+		Button customGame = new Button("Custom");
+		customGame.setOnAction(e->{
+			primaryStage.setScene(new CustomGameMenu(primaryStage).buildCustomGameMenuScene(this));
+		});
+		customGame.setMinSize(75,25);
+		customGame.setTranslateY(74);
+
     	Label l = new Label("Difficulty: ");
     	l.setTranslateY(77);
-    	HBox diffBox = new HBox(l, difficulty);
+    	HBox diffBox = new HBox(l, difficulty, customGame);
     	diffBox.setMaxHeight(40);
     	diffBox.setMaxWidth(200);
     	
     	Label title = new Label("Campo Minato");
     	title.setFont(Font.font(55));
     	title.setTranslateY(-40);
-    	mainMenu.getChildren().addAll(title,diffBox, play );
+    	mainMenu.getChildren().addAll(title,diffBox, play);
     	
     }
 
@@ -125,7 +129,42 @@ public class CampoMinatoApplication extends Application {
         return list;
     }
     
-    public static void main(String[] args) {
+
+
+	public MatriceCampoMinato getMatriceCampoMinato() {
+		return matriceCampoMinato;
+	}
+
+
+	public int getColonne() {
+		return colonne;
+	}
+
+	public void setColonne(int colonne) {
+		this.colonne = colonne;
+	}
+
+	public int getRighe() {
+		return righe;
+	}
+
+	public void setRighe(int righe) {
+		this.righe = righe;
+	}
+
+	public void setBombs(int bombs){
+    	this.bombs = bombs;
+	}
+
+	public StackPane getMainMenu() {
+		return mainMenu;
+	}
+
+	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	public Stage getPrimaryStage() {
+		return primaryStage;
 	}
 }

@@ -5,8 +5,10 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import tommy.apllication.campominato.CampoMinatoApplication;
 import tommy.apllication.exception.BombException;
 import tommy.apllication.exception.WinException;
+import tommy.apllication.menu.GameOverMenu;
 
 import java.util.*;
 
@@ -14,12 +16,13 @@ public class MatriceCampoMinato {
     private Casella[][] matriceCampoMinato;
     private int bombs, caselleScoperte;
     private boolean firstChoose;
+    private CampoMinatoApplication app;
 
-
-    public MatriceCampoMinato(int righe, int colonne, int bombs){
+    public MatriceCampoMinato(int righe, int colonne, int bombs, CampoMinatoApplication app){
         matriceCampoMinato = new Casella[righe][colonne];
         this.bombs=bombs;
         this.firstChoose=true;
+        this.app = app;
     }
 
     public void scopriCasella(int colonna, int riga) throws BombException, WinException {
@@ -42,9 +45,15 @@ public class MatriceCampoMinato {
             c.setText(String.valueOf(c.getStatus()));
             c.setDisable(true);
         }
-        else throw new BombException(c);
+        else {
+        		new GameOverMenu().buildGameOverMenu(false, app);
+        		throw new BombException(c);
+        	};
         ++caselleScoperte;
-        if(checkWin()) throw new WinException();
+        if(checkWin()) {
+        	new GameOverMenu().buildGameOverMenu(true, app);
+        	throw new WinException();
+        };
     }
 
     public boolean checkWin(){
@@ -66,7 +75,7 @@ public class MatriceCampoMinato {
                             for(Casella c: getsurroundingBoxes(column, row))
                                 if(c!=null) c.incrementStatus();
                             bombPlaced++;
-                            System.out.println("A");
+                            //System.out.println("A");
                         }
                         else freeCoordinates.add(matriceCampoMinato[row][column].getCoordinate());
                     }
@@ -86,7 +95,7 @@ public class MatriceCampoMinato {
                         if(c!=null) c.incrementStatus();
                     toRemove.add(coordinate);
                     bombPlaced++;
-                    System.out.println("B");
+                    //System.out.println("B");
                 }
                 if(bombPlaced>=bombs) break;
             }
@@ -234,11 +243,12 @@ public class MatriceCampoMinato {
                                                 if (cas.getStatus() < 0) cas.setStyle("-fx-background-color: #CD5C5C;");
                                                 else
                                                 {
-                                                    cas.setText(String.valueOf(cas.getStatus()));
+                                                    if(cas.getStatus()>0) cas.setText(String.valueOf(cas.getStatus()));
                                                     cas.setStyle("-fx-background-color: #B9B7A7;");
                                                 }
                                                 cas.setDisable(true);
                                             }
+                                    
                                 }
                                 catch (WinException w)
                                 {
