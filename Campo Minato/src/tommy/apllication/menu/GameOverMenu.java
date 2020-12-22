@@ -45,7 +45,7 @@ public class GameOverMenu {
 		Label gameOverLabel = new Label(won ? "You won!":"Game Over");
 		gameOverLabel.setFont(Font.font("Verdana" , FontWeight.EXTRA_BOLD,50));
 		gameOverLabel.setTranslateY(-40);
-		animateUsingTimeline(gameOverLabel);
+		animate(gameOverLabel);
 		
 		Button playAgain = new Button("Play Again");
 		playAgain.setScaleX(1.5);
@@ -73,7 +73,7 @@ public class GameOverMenu {
 		gameOverStage.show();
 	}
 	
-	private void animateUsingTimeline(Label l) {
+	private void animate(Label l) {
         DoubleProperty scale = new SimpleDoubleProperty(1);
         l.scaleXProperty().bind(scale);
         l.scaleYProperty().bind(scale);

@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -20,6 +21,7 @@ public class CampoMinatoApplication extends Application {
     private MatriceCampoMinato matriceCampoMinato;
     private int colonne= 10;
     private int righe = 12;
+    private Animations animClass;
 
     private int bombs = 5;
     private StackPane mainMenu;
@@ -29,6 +31,8 @@ public class CampoMinatoApplication extends Application {
 
     @Override
     public void start(Stage primaryStage){
+    	setUserAgentStylesheet(STYLESHEET_CASPIAN);
+    	this.animClass = new Animations();
     	initMainMenu();
     	this.primaryStage = primaryStage;
         this.primaryStage.setScene(new Scene(mainMenu));
@@ -87,8 +91,7 @@ public class CampoMinatoApplication extends Application {
     	play.setTranslateY(20);
     	play.setScaleX(1.5);
     	play.setScaleY(1.5);
-    	
-    	
+    	animClass.opacityAnimation(play, 0.0, 1, 70, 0.04);
     	
     	difficulty = new Slider();
     	difficulty.setMax(5);
@@ -108,16 +111,19 @@ public class CampoMinatoApplication extends Application {
 		});
 		customGame.setMinSize(75,25);
 		customGame.setTranslateY(74);
-
+		
     	Label l = new Label("Difficulty: ");
     	l.setTranslateY(77);
+    	
     	HBox diffBox = new HBox(l, difficulty, customGame);
     	diffBox.setMaxHeight(40);
     	diffBox.setMaxWidth(200);
+    	animClass.opacityAnimation(diffBox, 0.0, 1, 70, 0.04);
     	
     	Label title = new Label("Campo Minato");
     	title.setFont(Font.font(55));
-    	title.setTranslateY(-40);
+    	animClass.fallAnimation(title, -220, 160, 60, 0.03);
+    	
     	mainMenu.getChildren().addAll(title,diffBox, play);
     	
     }
