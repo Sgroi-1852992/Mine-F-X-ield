@@ -45,7 +45,7 @@ public class GameOverMenu {
 		Label gameOverLabel = new Label(won ? "You won!":"Game Over");
 		gameOverLabel.setFont(Font.font("Verdana" , FontWeight.EXTRA_BOLD,50));
 		gameOverLabel.setTranslateY(-40);
-		animate(gameOverLabel);
+		app.getAnimationsObj().easyPulseAnimation(gameOverLabel);
 		
 		Button playAgain = new Button("Play Again");
 		playAgain.setScaleX(1.5);
@@ -72,23 +72,5 @@ public class GameOverMenu {
 		
 		gameOverStage.show();
 	}
-	
-	private void animate(Label l) {
-        DoubleProperty scale = new SimpleDoubleProperty(1);
-        l.scaleXProperty().bind(scale);
-        l.scaleYProperty().bind(scale);
 
-        Timeline beat = new Timeline(
-            new KeyFrame(Duration.ZERO,         event -> scale.setValue(1)),
-            new KeyFrame(Duration.seconds(0.25), event -> scale.setValue(1.015)),
-            new KeyFrame(Duration.seconds(0.5), event -> scale.setValue(1.03)),
-            new KeyFrame(Duration.seconds(0.75), event -> scale.setValue(1.045)),
-            new KeyFrame(Duration.seconds(1), event -> scale.setValue(1.06)),
-            new KeyFrame(Duration.seconds(1.25), event -> scale.setValue(1.075)),
-            new KeyFrame(Duration.seconds(1.5), event -> scale.setValue(1.1))
-        );
-        beat.setAutoReverse(true);
-        beat.setCycleCount(Timeline.INDEFINITE);
-        beat.play();
-    }
 }

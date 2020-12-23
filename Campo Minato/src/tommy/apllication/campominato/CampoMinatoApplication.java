@@ -1,6 +1,7 @@
 package tommy.apllication.campominato;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -8,9 +9,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import tommy.apllication.gridandbox.MatriceCampoMinato;
@@ -89,6 +96,15 @@ public class CampoMinatoApplication extends Application {
     private void initMainMenu() {
     	mainMenu = new StackPane();
     	mainMenu.setMinSize(400, 350);
+    	mainMenu.setBackground(new Background(new BackgroundFill(Color.rgb(212, 158, 102), CornerRadii.EMPTY, Insets.EMPTY)));
+    	
+    	Image bomb = new Image("bomb_main.png");
+    	ImageView ivBomb = new ImageView(bomb);
+    	ivBomb.setOpacity(0.7);
+    	ivBomb.setScaleX(0.7);
+    	ivBomb.setScaleY(0.7);
+    	animClass.pulseAnimation(ivBomb, 0, 1, 50, 0.05, false);
+
     	Button play = new Button("Play");
     	play.setOnAction(e -> initGame(false));
     	play.setTranslateY(20);
@@ -127,7 +143,7 @@ public class CampoMinatoApplication extends Application {
     	title.setFont(Font.font(55));
     	animClass.fallAnimation(title, -220, 160, 60, 0.03);
     	
-    	mainMenu.getChildren().addAll(title,diffBox, play);
+    	mainMenu.getChildren().addAll(ivBomb, title,diffBox, play);
     	
     }
 
@@ -175,5 +191,10 @@ public class CampoMinatoApplication extends Application {
 	
 	public Stage getPrimaryStage() {
 		return primaryStage;
+	}
+
+
+	public Animations getAnimationsObj() {
+		return animClass;
 	}
 }

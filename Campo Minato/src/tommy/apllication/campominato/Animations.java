@@ -12,7 +12,7 @@ import javafx.util.Duration;
 
 public class Animations {
 	
-	void fallAnimation(Region n ,int yStart, int yEnd, int frames, double tpf) {
+	void fallAnimation(Node n ,int yStart, int yEnd, int frames, double tpf) {
 		
         DoubleProperty position = new SimpleDoubleProperty(yStart);
         double gap = yEnd/frames;
@@ -31,7 +31,7 @@ public class Animations {
         fall.play();
     }
 	
-	void opacityAnimation(Region n, double opStart, double opEnd, int frames, double tpf) {
+	void opacityAnimation(Node n, double opStart, double opEnd, int frames, double tpf) {
 		DoubleProperty position = new SimpleDoubleProperty(opStart);
         double gap = opEnd/frames;
         n.opacityProperty().bind(position);
@@ -48,5 +48,36 @@ public class Animations {
         );
         beat.play();
 	}
+	
+	
+	public void easyPulseAnimation(Node n) {
+		pulseAnimation(n, 1, 1.2, 10, 0.2, true);
+	}
+	
+	public void pulseAnimation(Node n, double sStart, double sEnd, int frames, double tpf, boolean cycle) {
+        DoubleProperty scale = new SimpleDoubleProperty(1);
+        n.scaleXProperty().bind(scale);
+        n.scaleYProperty().bind(scale);
+        
+        double passo = Math.abs((sStart - sEnd)/frames);
+        
+        KeyFrame[] l = new KeyFrame[frames];
+        
+        int i = 0;
+        
+        while(i < frames) {
+        	int j = i;
+        	l[i] = new KeyFrame(Duration.seconds(tpf*i), e -> scale.setValue(passo*j));
+        	i++;
+        }
+        
+        
+        Timeline beat = new Timeline(l);
+        if(cycle) {
+        	beat.setAutoReverse(cycle);
+        	beat.setCycleCount(Timeline.INDEFINITE);
+        }
+        beat.play();
+    }
 
 }
