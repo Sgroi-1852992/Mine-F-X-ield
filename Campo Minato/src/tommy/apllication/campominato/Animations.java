@@ -25,10 +25,10 @@ public class Animations {
         	list[frames] = new KeyFrame(Duration.seconds(tpf*frames), event -> position.setValue(yStart + i*gap));
         }
 
-        Timeline beat = new Timeline(
+        Timeline fall = new Timeline(
             list
         );
-        beat.play();
+        fall.play();
     }
 	
 	void opacityAnimation(Region n, double opStart, double opEnd, int frames, double tpf) {

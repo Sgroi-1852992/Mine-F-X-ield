@@ -19,8 +19,8 @@ import tommy.apllication.menu.CustomGameMenu;
 public class CampoMinatoApplication extends Application {
 
     private MatriceCampoMinato matriceCampoMinato;
-    private int colonne= 10;
-    private int righe = 12;
+    private int colonne;
+    private int righe;
     private Animations animClass;
 
     private int bombs = 5;
@@ -48,7 +48,7 @@ public class CampoMinatoApplication extends Application {
      * @return
      */
     public boolean initGame(boolean custom) {
-    	if(!custom)
+    	if(!custom) {
 			switch((int)difficulty.getValue()) {
 			case 1: bombs = 5; break;
 			case 2: bombs = 9; break;
@@ -56,6 +56,9 @@ public class CampoMinatoApplication extends Application {
 			case 4: bombs = 20; break;
 			default: bombs = 25; break;
 			};
+			colonne = 10;
+			righe = 10;
+    	}
     	matriceCampoMinato = new MatriceCampoMinato(righe, colonne, bombs ,this);
 
         Group grid = new Group();

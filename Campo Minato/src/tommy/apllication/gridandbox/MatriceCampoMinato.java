@@ -11,6 +11,8 @@ import tommy.apllication.exception.WinException;
 import tommy.apllication.menu.GameOverMenu;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MatriceCampoMinato {
     private Casella[][] matriceCampoMinato;
@@ -27,7 +29,7 @@ public class MatriceCampoMinato {
 
     public void scopriCasella(int colonna, int riga) throws BombException, WinException {
 
-        if(firstChoose) generateBombs(riga, colonna);
+        if(firstChoose) pene(riga, colonna);
 
         Casella c = matriceCampoMinato[riga][colonna];
 
@@ -59,7 +61,30 @@ public class MatriceCampoMinato {
     public boolean checkWin(){
         return caselleScoperte==(matriceCampoMinato[0].length* matriceCampoMinato.length - bombs);
     }
-
+    
+    private void pene(int riga, int colonna) {    	
+    	int row = matriceCampoMinato.length;
+    	int column = matriceCampoMinato[0].length;
+    	firstChoose=false;
+    	ArrayList<Integer> aa = Stream.iterate(0, x -> x + 1).limit(row*column).collect(Collectors.toCollection(ArrayList::new));
+    	aa.remove(column*(riga) + colonna);
+    	int[] bombList = new int[bombs];
+    	int bombsPlaced = 0;
+    	while(bombsPlaced++ < bombs) {
+    		int v = aa.remove((int)(Math.random()*aa.size()));
+    		int x = v%column;
+    		int y = v/column;
+    		matriceCampoMinato[y][x].setStatus(-1);
+            for(Casella c: getsurroundingBoxes(x, y))
+                if(c!=null) c.incrementStatus();
+    	}
+    	
+    }
+    /**
+     * we don't like optimization
+     * @param riga
+     * @param colonna
+     */
     public void generateBombs(int riga, int colonna){
         firstChoose=false;
         int bombPlaced = 0;
