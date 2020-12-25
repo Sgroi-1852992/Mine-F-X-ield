@@ -1,6 +1,7 @@
 package tommy.apllication.campominato;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -25,12 +26,16 @@ public class CampoMinatoApplication extends Application {
 	private Stage primaryStage;
 	private Slider difficulty;
 
+	private Scene mainMenuGame;
+	private Scene customMenuGame;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
     	initMainMenu();
     	this.primaryStage = primaryStage;
-        this.primaryStage.setScene(new Scene(mainMenu));
+    	this.mainMenuGame = new Scene(mainMenu);
+        this.primaryStage.setScene(this.mainMenuGame);
+    	this.customMenuGame = new CustomGameMenu(primaryStage).buildCustomGameMenuScene(this);
     	//this.primaryStage.show();
     	this.primaryStage.setTitle("Campo Minato");
     	this.primaryStage.setResizable(false);
@@ -55,8 +60,7 @@ public class CampoMinatoApplication extends Application {
 
         Group grid = new Group();
         HBox hbox = new HBox();
-        for(int x = 0; x<this.colonne; x++)
-            hbox.getChildren().add(new VBox(generateNodes(x)));
+        for(int x = 0; x<this.colonne; x++) hbox.getChildren().add(new VBox(generateNodes(x)));
 
 //        //FOR TESTING PURPOSE {
 //        Button apritutto = new Button("ApriTutto");
@@ -102,17 +106,18 @@ public class CampoMinatoApplication extends Application {
     	difficulty.setTranslateY(80);
 
 		Button customGame = new Button("Custom");
-		customGame.setOnAction(e->{
-			primaryStage.setScene(new CustomGameMenu(primaryStage).buildCustomGameMenuScene(this));
-		});
+		customGame.setOnAction(e-> primaryStage.setScene(customMenuGame));
 		customGame.setMinSize(75,25);
-		customGame.setTranslateY(74);
+		customGame.setTranslateY(80);
 
     	Label l = new Label("Difficulty: ");
     	l.setTranslateY(77);
-    	HBox diffBox = new HBox(l, difficulty, customGame);
-    	diffBox.setMaxHeight(40);
-    	diffBox.setMaxWidth(200);
+    	HBox diffBox = new HBox(10, l, difficulty, customGame);
+    	diffBox.setTranslateY(150);
+    	diffBox.setAlignment(Pos.BASELINE_CENTER);
+//    	diffBox.setMaxHeight(40);
+//    	diffBox.setMaxWidth(200);
+		difficulty.setTranslateY(difficulty.getTranslateY()+15);
     	
     	Label title = new Label("Campo Minato");
     	title.setFont(Font.font(55));
@@ -123,8 +128,7 @@ public class CampoMinatoApplication extends Application {
 
     public Node[] generateNodes(int x){
         Node[] list = new Node[this.righe];
-        for(int y = 0; y<this.righe;y++)
-            list[y] =matriceCampoMinato.setCasella(x,y, 0);
+        for(int y = 0; y<this.righe;y++) list[y] =matriceCampoMinato.setCasella(x,y, 0);
         return list;
     }
     
