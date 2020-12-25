@@ -31,6 +31,27 @@ public class Animations {
         fall.play();
     }
 	
+	void moveAnimation(Node n, int xStart, int yStart,int xEnd, int yEnd, int frames, double tpf) {
+		
+        DoubleProperty xPosition = new SimpleDoubleProperty(xStart);
+        DoubleProperty yPosition = new SimpleDoubleProperty(yStart);
+        double gap = yEnd/frames;
+        n.translateXProperty().bind(xPosition);
+        n.translateYProperty().bind(yPosition);
+        KeyFrame[] list = new KeyFrame[frames];
+        while(frames > 0) {
+        	frames--;
+        	int i = frames;
+        	list[frames] = new KeyFrame(Duration.seconds(tpf*frames), event -> {xPosition.setValue(xStart + i*gap); yPosition.setValue(yStart + i*gap);});
+        }
+
+        Timeline fall = new Timeline(
+            list
+        );
+        fall.play();
+    }
+	
+	
 	void opacityAnimation(Node n, double opStart, double opEnd, int frames, double tpf) {
 		DoubleProperty position = new SimpleDoubleProperty(opStart);
         double gap = opEnd/frames;
