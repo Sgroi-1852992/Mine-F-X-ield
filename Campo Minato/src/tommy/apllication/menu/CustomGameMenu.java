@@ -1,4 +1,4 @@
-package tommy.apllication.campominato;
+package tommy.apllication.menu;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import tommy.apllication.campominato.CampoMinatoApplication;
 
 public class CustomGameMenu {
     private Stage primaryStage;

@@ -4,16 +4,25 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import tommy.apllication.gridandbox.MatriceCampoMinato;
+import tommy.apllication.menu.MainMenu;
+
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class CampoMinatoApplication extends Application {
 
@@ -31,16 +40,26 @@ public class CampoMinatoApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-    	initMainMenu();
-    	this.primaryStage = primaryStage;
-    	this.mainMenuGame = new Scene(mainMenu);
-        this.primaryStage.setScene(this.mainMenuGame);
-    	this.customMenuGame = new CustomGameMenu(primaryStage).buildCustomGameMenuScene(this);
-    	//this.primaryStage.show();
-    	this.primaryStage.setTitle("Campo Minato");
-    	this.primaryStage.setResizable(false);
+//    	initMainMenu();
+//    	this.primaryStage = primaryStage;
+//    	this.mainMenuGame = new Scene(mainMenu);
+//        this.primaryStage.setScene(this.mainMenuGame);
+//    	this.customMenuGame = new CustomGameMenu(primaryStage).buildCustomGameMenuScene(this);
+//    	//this.primaryStage.show();
+//    	this.primaryStage.setTitle("Campo Minato");
+//    	this.primaryStage.setResizable(false);
+		InputStream is = Files.newInputStream(Paths.get("res/images/minefield.jpg"));
+		Image minefieldImage = new Image(is);
+		is.close();
+
+		Pane mainMenu = new MainMenu(/*800,500,*/ new ImageView(minefieldImage));
+
+		primaryStage.setScene(new Scene(mainMenu));
 		primaryStage.show();
-    }
+		primaryStage.setMaxHeight((int)mainMenu.getHeight());
+
+
+	}
 
 
     /**

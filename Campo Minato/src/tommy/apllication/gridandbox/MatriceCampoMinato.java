@@ -54,11 +54,7 @@ public class MatriceCampoMinato {
 
         //keep track of free spaces
         LinkedList<Casella> freeBoxes = new LinkedList<>();
-        Arrays.stream(matriceCampoMinato).forEach(caselle->{
-            Arrays.stream(caselle).forEach(casella-> {
-                if(!init.equals(casella)) freeBoxes.add(casella);
-            });
-        });
+        Arrays.stream(matriceCampoMinato).forEach(caselle->Arrays.stream(caselle).forEach(casella-> {if(!init.equals(casella)) freeBoxes.add(casella);}));
 
         int bombPlaced = 0;
         while(bombPlaced<bombs)
