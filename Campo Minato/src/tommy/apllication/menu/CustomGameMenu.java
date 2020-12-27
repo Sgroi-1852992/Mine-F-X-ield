@@ -43,7 +43,7 @@ public class CustomGameMenu {
             app.setBombs(spinnerBombs.getValue());
             app.setColonne(spinnerWidth.getValue());
             app.setRighe(spinnerHeight.getValue());
-            app.initGame(true);
+            app.initGame();
         });
 
         Button back = new Button("Back");
