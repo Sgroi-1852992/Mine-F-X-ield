@@ -45,7 +45,7 @@ public class GameOverMenu {
 		Label gameOverLabel = new Label(won ? "You won!":"Game Over");
 		gameOverLabel.setFont(Font.font("Verdana" , FontWeight.EXTRA_BOLD,50));
 		gameOverLabel.setTranslateY(-40);
-		app.getAnimationsObj().easyPulseAnimation(gameOverLabel);
+		app.getAnimationsObj().pulseAnimation(gameOverLabel, 1, 1.1, 40, 0.06, true);
 		
 		Button playAgain = new Button("Play Again");
 		playAgain.setScaleX(1.5);

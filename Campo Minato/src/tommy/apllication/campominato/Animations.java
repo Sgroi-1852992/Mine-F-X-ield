@@ -76,7 +76,7 @@ public class Animations {
 	}
 	
 	public void pulseAnimation(Node n, double sStart, double sEnd, int frames, double tpf, boolean cycle) {
-        DoubleProperty scale = new SimpleDoubleProperty(1);
+        DoubleProperty scale = new SimpleDoubleProperty(sStart);
         n.scaleXProperty().bind(scale);
         n.scaleYProperty().bind(scale);
         
@@ -88,7 +88,7 @@ public class Animations {
         
         while(i < frames) {
         	int j = i;
-        	l[i] = new KeyFrame(Duration.seconds(tpf*i), e -> scale.setValue(passo*j));
+        	l[i] = new KeyFrame(Duration.seconds(tpf*i), e -> scale.setValue(sStart + passo*j));
         	i++;
         }
         
