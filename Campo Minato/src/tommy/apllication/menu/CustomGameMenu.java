@@ -39,6 +39,7 @@ public class CustomGameMenu {
         setValueAtMaxPossible(spinnerBombs, spinnerHeight, spinnerWidth, spinnerBombs);
 
         Button play = new Button("Play");
+
         play.setScaleX(1.5);
         play.setScaleY(1.5);
         play.setTranslateX(-20);
@@ -47,6 +48,7 @@ public class CustomGameMenu {
             app.setBombs(spinnerBombs.getValue());
             app.setColonne(spinnerWidth.getValue());
             app.setRighe(spinnerHeight.getValue());
+
             app.initGame(true);
         });
 

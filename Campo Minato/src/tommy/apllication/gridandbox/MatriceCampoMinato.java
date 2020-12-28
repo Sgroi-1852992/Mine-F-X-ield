@@ -28,10 +28,9 @@ public class MatriceCampoMinato {
     }
 
     public void scopriCasella(int colonna, int riga) throws BombException, WinException {
-
         if(firstChoose) pene(riga, colonna);
-
         Casella c = matriceCampoMinato[riga][colonna];
+        if(firstChoose) generateBombs(c);
 
         if(c.getStatus()==0)
         {
@@ -87,8 +86,9 @@ public class MatriceCampoMinato {
      */
     public void generateBombs(int riga, int colonna){
         firstChoose=false;
-        int bombPlaced = 0;
+
         //keep track of free spaces
+
         LinkedList<Coordinate> freeCoordinates = new LinkedList<>();
             for (int column = 0; column < matriceCampoMinato[0].length; column++)
                 for (int row = 0; row < matriceCampoMinato.length; row++)
@@ -105,9 +105,12 @@ public class MatriceCampoMinato {
                         else freeCoordinates.add(matriceCampoMinato[row][column].getCoordinate());
                     }
 
-        Collections.shuffle(freeCoordinates);
-        if(bombPlaced<bombs)
-        while(true)
+        LinkedList<Casella> freeBoxes = new LinkedList<>();
+        Arrays.stream(matriceCampoMinato).forEach(caselle->Arrays.stream(caselle).forEach(casella-> {if(!init.equals(casella)) freeBoxes.add(casella);}));
+
+
+        int bombPlaced = 0;
+        while(bombPlaced<bombs)
         {
             ArrayList<Coordinate> toRemove = new ArrayList<>();
 
@@ -126,7 +129,22 @@ public class MatriceCampoMinato {
             }
             if(bombPlaced<bombs) freeCoordinates.removeAll(toRemove);
             else break;
+            int toRemove = (int)(freeBoxes.size() * Math.random());
+            Casella casella = freeBoxes.get(toRemove);
+            casella.setStatus(-1);
+            freeBoxes.remove(toRemove);
+            incrementSurroundingBoxes(casella.getCoordinate());
+            bombPlaced++;
         }
+
+    }
+
+    public void incrementSurroundingBoxes(Coordinate coordinate){
+        int column = coordinate.getX();
+        int row = coordinate.getY();
+
+        for(Casella c: getsurroundingBoxes(column, row))
+            if(c!=null) c.incrementStatus();
     }
 
     public Casella[] getsurroundingBoxes(int column, int riga){
