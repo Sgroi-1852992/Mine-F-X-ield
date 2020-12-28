@@ -105,12 +105,12 @@ public class CampoMinatoApplication extends Application {
     	ivBomb.setScaleY(0.7);
     	animClass.pulseAnimation(ivBomb, 0, 1, 50, 0.05, false);
     	
-    	Image redStar = new Image("stella_gialla.png");
-    	ImageView ivRedStar = new ImageView(redStar);
-    	ivRedStar.setScaleX(0.7);
-    	ivRedStar.setScaleY(0.7);
-    	animClass.moveAnimation(ivRedStar, 0, 0, 300, -600, 200, 0.06);
-    	
+//    	Image redStar = new Image("stella_gialla.png");
+//    	ImageView ivRedStar = new ImageView(redStar);
+//    	ivRedStar.setScaleX(0.7);
+//    	ivRedStar.setScaleY(0.7);
+//    	animClass.moveAnimation(ivRedStar, 0, 0, 300, -600, 200, 0.06);
+    	animClass.starShooting(mainMenu, 0, 0);
     	
 
     	Button play = new Button("Play");
@@ -151,7 +151,7 @@ public class CampoMinatoApplication extends Application {
     	title.setFont(Font.font(55));
     	animClass.fallAnimation(title, -220, 160, 60, 0.03);
     	
-    	mainMenu.getChildren().addAll(ivBomb, ivRedStar, title,diffBox, play);
+    	mainMenu.getChildren().addAll(ivBomb, title,diffBox, play);
     	
     }
 
