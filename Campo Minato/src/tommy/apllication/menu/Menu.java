@@ -9,10 +9,12 @@ import tommy.apllication.campominato.CampoMinatoApplication;
 public abstract class Menu extends Pane {
     protected VBox vBox = new VBox(10);
     protected CampoMinatoApplication app;
+    protected double translateY;
 
     public Menu(ImageView imageView, CampoMinatoApplication app) {
+        this.translateY = 100;
         getChildren().add(imageView);
-        vBox.setTranslateY(100);
+        vBox.setTranslateY(translateY);
         this.app = app;
     }
 
@@ -26,4 +28,6 @@ public abstract class Menu extends Pane {
     }
 
     protected void addVboxToPane(){getChildren().add(vBox);}
+
+
 }

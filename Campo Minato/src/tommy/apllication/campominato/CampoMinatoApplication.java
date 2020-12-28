@@ -10,12 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Mnemonic;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import tommy.apllication.gridandbox.MatriceCampoMinato;
+import tommy.apllication.menu.CustomGameMenu;
 import tommy.apllication.menu.DifficultyMenu;
 import tommy.apllication.menu.MainMenu;
 import tommy.apllication.menu.Menu;
@@ -35,7 +37,7 @@ public class CampoMinatoApplication extends Application {
 
 	private Scene mainMenuGame;
 	private Scene difficultyMenu;
-	private Scene customMenuGame;
+	private Scene customGameMenu;
 
 	private Stage primaryStage;
 
@@ -49,6 +51,9 @@ public class CampoMinatoApplication extends Application {
 
 		Menu difficultyMenu = new DifficultyMenu(new ImageView(setBackground()), this);
 		this.difficultyMenu = new Scene(difficultyMenu);
+
+		Menu customGameMenu = new CustomGameMenu(new ImageView(setBackground()), this);
+		this.customGameMenu = new Scene(customGameMenu);
 
 		primaryStage.setScene(this.mainMenuGame);
 		animateMenu(mainMenu);
@@ -67,14 +72,6 @@ public class CampoMinatoApplication extends Application {
      * @return
      */
     public boolean initGame() {
-//    	if(!custom)
-//			switch((int)difficulty.getValue()) {
-//			case 1: bombs = 5; break;
-//			case 2: bombs = 9; break;
-//			case 3: bombs = 14; break;
-//			case 4: bombs = 20; break;
-//			default: bombs = 25; break;
-//			};
     	matriceCampoMinato = new MatriceCampoMinato(righe, colonne, bombs);
 
         Group grid = new Group();
@@ -96,8 +93,8 @@ public class CampoMinatoApplication extends Application {
 		Button b = (Button)((Parent)hbox.getChildren().get(0)).getChildrenUnmodifiable().get(0);
 		double lato = b.getHeight();
 
-		primaryStage.setHeight(lato*righe);
-		primaryStage.setWidth(lato*colonne+14);
+		primaryStage.setHeight(hbox.getHeight()+35.5);
+		primaryStage.setWidth(hbox.getWidth()+14.2);
     	return true;
     }
 
@@ -119,11 +116,11 @@ public class CampoMinatoApplication extends Application {
 	}
 
 	public void animateMenu(Menu menu){
-    	VBox vBox = (VBox) menu.getChildren().stream().filter(n-> n instanceof VBox).findFirst().get();
-    	for(int i = 0; i<vBox.getChildrenUnmodifiable().size(); i++)
+    	Parent box = (Parent) menu.getChildren().stream().filter(n-> n instanceof VBox || n instanceof HBox).findFirst().get();
+    	for(int i = 0; i<box.getChildrenUnmodifiable().size(); i++)
 		{
-			Node node = vBox.getChildrenUnmodifiable().get(i);
-			TranslateTransition transition = new TranslateTransition(Duration.seconds(1 + i * 0.23), node);
+			Node node = box.getChildrenUnmodifiable().get(i);
+			TranslateTransition transition = new TranslateTransition(Duration.seconds(1 + i * 0.1), node);
 			transition.setToX(50);
 			transition.play();
 		}
@@ -171,7 +168,6 @@ public class CampoMinatoApplication extends Application {
 	public void setDifficultyMenuScene() {
 		primaryStage.setScene(difficultyMenu);
 		animateMenu((Menu) difficultyMenu.getRoot());
-
 	}
 
 //	public Scene getCustomMenuGame() {
@@ -179,7 +175,8 @@ public class CampoMinatoApplication extends Application {
 //	}
 
 	public void setCustomMenuGameScene() {
-		primaryStage.setScene(customMenuGame);
+		primaryStage.setScene(customGameMenu);
+		animateMenu((Menu) customGameMenu.getRoot());
 	}
 
 //	public Stage getPrimaryStage() {

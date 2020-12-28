@@ -1,13 +1,10 @@
 package tommy.apllication.menu;
 
-import javafx.event.EventType;
 import javafx.scene.image.ImageView;
 import tommy.apllication.campominato.CampoMinatoApplication;
 import tommy.apllication.menu.children.MenuButton;
 
-import java.awt.event.MouseEvent;
-
-public class DifficultyMenu extends Menu {
+public class DifficultyMenu extends Menu implements Playable, Backable{
 
     private enum Difficulty{
 
@@ -37,27 +34,14 @@ public class DifficultyMenu extends Menu {
     }
 
     protected void setUpButtons(){
-        easy.setOnMouseClicked(m-> {
-            CampoMinatoApplication.setBombs(Difficulty.EASY.getBombs());
-            app.initGame();
-        });
-        intermediate.setOnMouseClicked(m-> {
-            CampoMinatoApplication.setBombs(Difficulty.INTERMEDIATE.getBombs());
-            app.initGame();
-        });
-        advanced.setOnMouseClicked(m-> {
-            CampoMinatoApplication.setBombs(Difficulty.ADVANCED.getBombs());
-            app.initGame();
-        });
-        expert.setOnMouseClicked(m-> {
-            CampoMinatoApplication.setBombs(Difficulty.EXPERT.getBombs());
-            app.initGame();
-        });
-        insane.setOnMouseClicked(m-> {
-            CampoMinatoApplication.setBombs(Difficulty.INSANE.getBombs());
-            app.initGame();
-        });
-        back.setOnMouseClicked(m-> app.setMainMenuGameScene());
+        easy.setOnMouseClicked(m-> Playable.startGame(app, Difficulty.EASY.getBombs()));
+        intermediate.setOnMouseClicked(m-> Playable.startGame(app, Difficulty.INTERMEDIATE.getBombs()));
+        advanced.setOnMouseClicked(m-> Playable.startGame(app, Difficulty.ADVANCED.getBombs()));
+        expert.setOnMouseClicked(m-> Playable.startGame(app, Difficulty.EXPERT.getBombs()));
+        insane.setOnMouseClicked(m-> Playable.startGame(app, Difficulty.INSANE.getBombs()));
+        back.setOnMouseClicked(m-> back());
     }
 
+    @Override
+    public void back() {app.setMainMenuGameScene();}
 }

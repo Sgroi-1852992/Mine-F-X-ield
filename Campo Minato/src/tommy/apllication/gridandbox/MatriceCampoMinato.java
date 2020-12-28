@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import tommy.apllication.campominato.CampoMinatoApplication;
 import tommy.apllication.exception.BombException;
 import tommy.apllication.exception.WinException;
 
@@ -46,7 +47,7 @@ public class MatriceCampoMinato {
     }
 
     public boolean checkWin(){
-        return caselleScoperte==(matriceCampoMinato[0].length* matriceCampoMinato.length - bombs);
+        return caselleScoperte==(CampoMinatoApplication.getColonne()*CampoMinatoApplication.getRighe() - bombs);
     }
 
     public void generateBombs(Casella init){

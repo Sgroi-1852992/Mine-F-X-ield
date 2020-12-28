@@ -5,87 +5,101 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.effect.Glow;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tommy.apllication.campominato.CampoMinatoApplication;
+import tommy.apllication.menu.children.MenuButton;
 
-public class CustomGameMenu {
-    private Stage primaryStage;
+public class CustomGameMenu extends Menu implements Playable, Backable{
 
-    public CustomGameMenu(Stage primaryStage){
-        this.primaryStage=primaryStage;
+    private CustomMenuButton rows = new CustomMenuButton("RIGHE");
+    private CustomMenuButton column = new CustomMenuButton("COLONNE");
+    private CustomMenuButton bombs = new CustomMenuButton("BOMBE");
+    private CustomMenuButton play = new CustomMenuButton("PLAY");
+    private CustomMenuButton none = new CustomMenuButton("");
+    private CustomMenuButton back = new CustomMenuButton("BACK");
+    Spinner<Integer> spinnerWidth;
+    Spinner<Integer> spinnerHeight;
+    Spinner<Integer> spinnerBombs;
+
+    public CustomGameMenu(ImageView imageView, CampoMinatoApplication app) {
+        super(imageView, app);
+        setUpButtons();
+        addItems(rows, column, bombs, play, none, back);
+        addVboxToPane();
     }
 
-    public Scene buildCustomGameMenuScene(CampoMinatoApplication app){
+    private void setUpButtons(){
+        play.setOnMouseClicked(m ->{
+            CampoMinatoApplication.setRighe(spinnerHeight.getValue());
+            CampoMinatoApplication.setColonne(spinnerWidth.getValue());
+            CampoMinatoApplication.setBombs(spinnerBombs.getValue());
 
-        Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
-        Label width = buildLabel("Colonne:", font);
-        Label height = buildLabel("Righe:", font);
-        Label bombs = buildLabel("Bombe:", font);
+            app.initGame();
+        });
 
-        int maxLength = Math.max(Math.max(width.getText().length(), height.getText().length()), bombs.getText().length());
+        back.setOnMouseClicked(m -> back());
 
-        Spinner<Integer> spinnerWidth = buildSpinner(2, 100, 10, 75, 25);
-        Spinner<Integer> spinnerHeight = buildSpinner(2, 100, 10, 75, 25);
-        Spinner<Integer> spinnerBombs = buildSpinner(2, 100, 10, 75, 25);
+        none.setOpacity(0);
+
+        for(CustomMenuButton c: new CustomMenuButton[]{rows, column, bombs, none})
+        {
+            c.setOnMouseClicked(m-> {});
+            c.setOnMousePressed(m-> {});
+        }
+    }
+
+    @Override
+    protected void addVboxToPane() {
+        HBox hBox = new HBox(20);
+
+        spinnerWidth = buildSpinner(2, 100, 10, 75, (int) rows.getHeightMenuButton());
+        spinnerHeight = buildSpinner(2, 100, 10, 75, (int) rows.getHeightMenuButton());
+        spinnerBombs = buildSpinner(1, 999, 10, 75, (int) rows.getHeightMenuButton());
 
         setValueAtMaxPossible(spinnerHeight, spinnerHeight, spinnerWidth, spinnerBombs);
         setValueAtMaxPossible(spinnerWidth, spinnerHeight, spinnerWidth, spinnerBombs);
         setValueAtMaxPossible(spinnerBombs, spinnerHeight, spinnerWidth, spinnerBombs);
 
-        Button play = new Button("Play");
-        play.setOnAction(e->{
-            app.setBombs(spinnerBombs.getValue());
-            app.setColonne(spinnerWidth.getValue());
-            app.setRighe(spinnerHeight.getValue());
-            app.initGame();
-        });
-
-        Button back = new Button("Back");
-        back.setOnAction(e->primaryStage.setScene(app.getMainMenu().getScene()));
-
-
-        HBox hWidth = new HBox(width, spinnerWidth);
-        hWidth.setSpacing(5);
-        HBox hHeight = new HBox(height, spinnerHeight);
-        hHeight.setSpacing(20);
-        HBox hBombs = new HBox(bombs, spinnerBombs);
-        hBombs.setSpacing(12);
-        VBox vbox = new VBox(5, hWidth, hHeight, hBombs, new HBox(5, play, back));
-
-        vbox.getChildren().forEach(child->{if(child instanceof HBox) ((HBox) child).setAlignment(Pos.CENTER);});
-        vbox.setAlignment(Pos.CENTER);
-        StackPane s = new StackPane(vbox);
-        s.setMinSize(app.getMainMenu().getWidth(),app.getMainMenu().getHeight());
-        Scene scene = new Scene(s);
-        return scene;
+        VBox spinners = new VBox(10, spinnerWidth, spinnerHeight, spinnerBombs);
+        spinners.setTranslateY(translateY);
+        hBox.getChildren().addAll(this.vBox, spinners);
+        getChildren().add(hBox);
     }
 
     private Spinner<Integer> buildSpinner(int i, int i1, int i2, int width, int height) {
         Spinner<Integer> spinner = new Spinner<>(i, i1, i2);
         spinner.setPrefSize(width, height);
-        spinner.setEditable(true);
         return spinner;
-    }
+     }
 
-    private void setValueAtMaxPossible(Spinner<Integer> spinner, Spinner<Integer> spinnerHeight, Spinner<Integer> spinnerWidth, Spinner<Integer> spinnerBombs){
+     private void setValueAtMaxPossible(Spinner<Integer> spinner, Spinner<Integer> spinnerHeight, Spinner<Integer> spinnerWidth, Spinner<Integer> spinnerBombs){
         spinner.valueProperty().addListener((obs, oldValue, newValue)-> {
             if(spinnerBombs.getValue()>spinnerWidth.getValue()*spinnerHeight.getValue()-1)
                 spinnerBombs.getValueFactory().setValue(spinnerWidth.getValue()*spinnerHeight.getValue()-1);
         });
     }
 
-    private Label buildLabel(String text, Font font){
-        Label label = new Label(text);
-        label.setFont(font);
-        return label;
-    }
+    @Override
+    public void back() {app.setMainMenuGameScene();}
 
-    //public void show(){customGameMenu.show();}
+    private class CustomMenuButton extends MenuButton{
+        public CustomMenuButton(String text){
+            super(text, 150, 30);
+        }
+    }
 
 }

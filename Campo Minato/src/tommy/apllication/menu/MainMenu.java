@@ -13,11 +13,10 @@ public class MainMenu extends Menu {
     public MainMenu(ImageView imageView, CampoMinatoApplication app){
         super(imageView, app);
         addItems(play, customPlay, settings, exit);
-        //vBox.setTranslateX(50);
-
 
         addVboxToPane();
         play.setOnMouseClicked(mouseEvent -> app.setDifficultyMenuScene());
+        customPlay.setOnMouseClicked(mouseEvent -> app.setCustomMenuGameScene());
         exit.setOnMouseClicked(mouseEvent -> System.exit(0));
     }
 
