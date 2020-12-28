@@ -39,14 +39,24 @@ public class CustomGameMenu {
         setValueAtMaxPossible(spinnerBombs, spinnerHeight, spinnerWidth, spinnerBombs);
 
         Button play = new Button("Play");
+
+        play.setScaleX(1.5);
+        play.setScaleY(1.5);
+        play.setTranslateX(-20);
+        play.setTranslateY(20);
         play.setOnAction(e->{
             app.setBombs(spinnerBombs.getValue());
             app.setColonne(spinnerWidth.getValue());
             app.setRighe(spinnerHeight.getValue());
-            app.initGame();
+
+            app.initGame(true);
         });
 
         Button back = new Button("Back");
+        back.setScaleX(1.5);
+        back.setScaleY(1.5);
+        back.setTranslateX(20);
+        back.setTranslateY(20);
         back.setOnAction(e->primaryStage.setScene(app.getMainMenu().getScene()));
 
 

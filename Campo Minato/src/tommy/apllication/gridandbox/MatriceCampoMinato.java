@@ -5,24 +5,30 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import tommy.apllication.campominato.CampoMinatoApplication;
 import tommy.apllication.exception.BombException;
 import tommy.apllication.exception.WinException;
+import tommy.apllication.menu.GameOverMenu;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MatriceCampoMinato {
     private Casella[][] matriceCampoMinato;
     private int bombs, caselleScoperte;
     private boolean firstChoose;
+    private CampoMinatoApplication app;
 
-
-    public MatriceCampoMinato(int righe, int colonne, int bombs){
+    public MatriceCampoMinato(int righe, int colonne, int bombs, CampoMinatoApplication app){
         matriceCampoMinato = new Casella[righe][colonne];
         this.bombs=bombs;
         this.firstChoose=true;
+        this.app = app;
     }
 
     public void scopriCasella(int colonna, int riga) throws BombException, WinException {
+        if(firstChoose) pene(riga, colonna);
         Casella c = matriceCampoMinato[riga][colonna];
         if(firstChoose) generateBombs(c);
 
@@ -40,25 +46,89 @@ public class MatriceCampoMinato {
             c.setText(String.valueOf(c.getStatus()));
             c.setDisable(true);
         }
-        else throw new BombException(c);
+        else {
+        		new GameOverMenu().buildGameOverMenu(false, app);
+        		throw new BombException(c);
+        	};
         ++caselleScoperte;
-        if(checkWin()) throw new WinException();
+        if(checkWin()) {
+        	new GameOverMenu().buildGameOverMenu(true, app);
+        	throw new WinException();
+        };
     }
 
     public boolean checkWin(){
         return caselleScoperte==(matriceCampoMinato[0].length* matriceCampoMinato.length - bombs);
     }
-
-    public void generateBombs(Casella init){
+    
+    private void pene(int riga, int colonna) {    	
+    	int row = matriceCampoMinato.length;
+    	int column = matriceCampoMinato[0].length;
+    	firstChoose=false;
+    	ArrayList<Integer> aa = Stream.iterate(0, x -> x + 1).limit(row*column).collect(Collectors.toCollection(ArrayList::new));
+    	aa.remove(column*(riga) + colonna);
+    	int[] bombList = new int[bombs];
+    	int bombsPlaced = 0;
+    	while(bombsPlaced++ < bombs) {
+    		int v = aa.remove((int)(Math.random()*aa.size()));
+    		int x = v%column;
+    		int y = v/column;
+    		matriceCampoMinato[y][x].setStatus(-1);
+            for(Casella c: getsurroundingBoxes(x, y))
+                if(c!=null) c.incrementStatus();
+    	}
+    	
+    }
+    /**
+     * we don't like optimization
+     * @param riga
+     * @param colonna
+     */
+    public void generateBombs(int riga, int colonna){
         firstChoose=false;
 
         //keep track of free spaces
+
+        LinkedList<Coordinate> freeCoordinates = new LinkedList<>();
+            for (int column = 0; column < matriceCampoMinato[0].length; column++)
+                for (int row = 0; row < matriceCampoMinato.length; row++)
+                    if (column != colonna || row != riga)
+                    {
+                        if(bombPlaced<bombs && Math.random()<=0.025)
+                        {
+                            matriceCampoMinato[row][column].setStatus(-1);
+                            for(Casella c: getsurroundingBoxes(column, row))
+                                if(c!=null) c.incrementStatus();
+                            bombPlaced++;
+                            //System.out.println("A");
+                        }
+                        else freeCoordinates.add(matriceCampoMinato[row][column].getCoordinate());
+                    }
+
         LinkedList<Casella> freeBoxes = new LinkedList<>();
         Arrays.stream(matriceCampoMinato).forEach(caselle->Arrays.stream(caselle).forEach(casella-> {if(!init.equals(casella)) freeBoxes.add(casella);}));
+
 
         int bombPlaced = 0;
         while(bombPlaced<bombs)
         {
+            ArrayList<Coordinate> toRemove = new ArrayList<>();
+
+            for(Coordinate coordinate: freeCoordinates)
+            {
+                if(Math.random()<=0.15)
+                {
+                    matriceCampoMinato[coordinate.getY()][coordinate.getX()].setStatus(-1);
+                    for(Casella c: getsurroundingBoxes(coordinate.getX(), coordinate.getY()))
+                        if(c!=null) c.incrementStatus();
+                    toRemove.add(coordinate);
+                    bombPlaced++;
+                    //System.out.println("B");
+                }
+                if(bombPlaced>=bombs) break;
+            }
+            if(bombPlaced<bombs) freeCoordinates.removeAll(toRemove);
+            else break;
             int toRemove = (int)(freeBoxes.size() * Math.random());
             Casella casella = freeBoxes.get(toRemove);
             casella.setStatus(-1);
@@ -221,6 +291,7 @@ public class MatriceCampoMinato {
                                                 }
                                                 cas.setDisable(true);
                                             }
+                                    
                                 }
                                 catch (WinException w)
                                 {
