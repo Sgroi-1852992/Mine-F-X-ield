@@ -1,13 +1,17 @@
 package tommy.apllication.gridandbox;
 
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import tommy.apllication.campominato.CampoMinatoApplication;
 import tommy.apllication.exception.BombException;
 import tommy.apllication.exception.WinException;
+import tommy.apllication.menu.GameOverMenu;
 
 import java.util.*;
 
@@ -15,7 +19,6 @@ public class MatriceCampoMinato {
     private Casella[][] matriceCampoMinato;
     private int bombs, caselleScoperte;
     private boolean firstChoose;
-
 
     public MatriceCampoMinato(int righe, int colonne, int bombs){
         matriceCampoMinato = new Casella[righe][colonne];
@@ -183,7 +186,7 @@ public class MatriceCampoMinato {
 
     public class Casella extends Button {
         private int status;
-        private double size = 35;
+        private double size = 25;
         /**
          * X:Colonna
          * Y:Riga
@@ -250,6 +253,10 @@ public class MatriceCampoMinato {
                 });
             setStyle("-fx-background-radius: 0");
             setTextFill(Color.BLACK);
+//            double max = Math.max(matriceCampoMinato.length, matriceCampoMinato[0].length);
+//            double newSize = size*max<=CampoMinatoApplication.getMaxWidthHeight()?
+//                            size: CampoMinatoApplication.getMaxWidthHeight()/max;
+//            System.out.println(newSize);
             setMinSize(size, size);
             setFocusTraversable(false);
             setTextAlignment(TextAlignment.CENTER);
@@ -270,7 +277,11 @@ public class MatriceCampoMinato {
                 status++;
         }
 
-         @Override
+        public double getSize() {
+            return size;
+        }
+
+        @Override
         public boolean equals(Object o){
              if (this == o) return true;
              if (o == null || getClass() != o.getClass()) return false;

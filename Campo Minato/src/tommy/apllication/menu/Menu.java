@@ -13,10 +13,12 @@ public abstract class Menu extends Pane {
 
     public Menu(ImageView imageView, CampoMinatoApplication app) {
         this.translateY = 100;
-        getChildren().add(imageView);
+        if(imageView!=null) getChildren().add(imageView);
         vBox.setTranslateY(translateY);
         this.app = app;
     }
+
+    public Menu(CampoMinatoApplication app){this(null, app);}
 
 //    public Menu(ImageView imageView){
 //        this(imageView, null);

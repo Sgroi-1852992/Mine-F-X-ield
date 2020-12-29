@@ -2,6 +2,9 @@ package tommy.apllication.campominato;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.embed.swing.JFXPanel;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -10,6 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.Mnemonic;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -17,10 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import tommy.apllication.gridandbox.MatriceCampoMinato;
-import tommy.apllication.menu.CustomGameMenu;
-import tommy.apllication.menu.DifficultyMenu;
-import tommy.apllication.menu.MainMenu;
-import tommy.apllication.menu.Menu;
+import tommy.apllication.menu.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,8 +30,8 @@ import java.io.InputStream;
 public class CampoMinatoApplication extends Application {
 
     private MatriceCampoMinato matriceCampoMinato;
-    private static int colonne = 10;
-    private static int righe = 12;
+    private static int colonne;
+    private static int righe;
     private static int bombs;
 
     private StackPane mainMenu;
@@ -41,7 +43,8 @@ public class CampoMinatoApplication extends Application {
 
 	private Stage primaryStage;
 
-    @Override
+
+	@Override
     public void start(Stage primaryStage) throws Exception{
     	this.primaryStage = primaryStage;
     	this.primaryStage.setTitle("Campo Minato");
@@ -63,7 +66,10 @@ public class CampoMinatoApplication extends Application {
 		primaryStage.setHeight((int)mainMenu.getHeight());
 		primaryStage.setResizable(false);
 
+		primaryStage.setMaxWidth(800);
+		primaryStage.setMaxHeight(800);
 
+		resetValuesToDefault();
 	}
 
 
@@ -72,9 +78,9 @@ public class CampoMinatoApplication extends Application {
      * @return
      */
     public boolean initGame() {
+
     	matriceCampoMinato = new MatriceCampoMinato(righe, colonne, bombs);
 
-        Group grid = new Group();
         HBox hbox = new HBox();
         for(int x = 0; x<this.colonne; x++) hbox.getChildren().add(new VBox(generateNodes(x)));
 
@@ -88,13 +94,30 @@ public class CampoMinatoApplication extends Application {
 //        hbox.getChildren().add(0, apritutto);
 //        //FOR TESTING PURPOSE }
 
-        grid.getChildren().add(hbox);
-        primaryStage.setScene(new Scene(grid));
-		Button b = (Button)((Parent)hbox.getChildren().get(0)).getChildrenUnmodifiable().get(0);
-		double lato = b.getHeight();
+		hbox.setAlignment(Pos.CENTER);
+		Group grid = new Group(hbox);
+		Scene matrix = new Scene(grid);
 
-		primaryStage.setHeight(hbox.getHeight()+35.5);
-		primaryStage.setWidth(hbox.getWidth()+14.2);
+		matrix.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			double height = primaryStage.getHeight();
+			double width = primaryStage.getWidth();
+			@Override
+			public void handle(KeyEvent keyEvent) {
+				if(keyEvent.getCode() == KeyCode.ESCAPE || keyEvent.getCode() == KeyCode.ENTER)
+				{
+					primaryStage.setHeight(height);
+					primaryStage.setWidth(width);
+					setMainMenuGameScene();
+				}
+			}
+		});
+		primaryStage.setScene(matrix);
+		MatriceCampoMinato.Casella b = (MatriceCampoMinato.Casella) ((Parent)hbox.getChildren().get(0)).getChildrenUnmodifiable().get(0);
+		double size = b.getSize();
+//		primaryStage.setHeight(size*righe+righe*2);
+		primaryStage.setHeight(size*righe+44);
+//		primaryStage.setWidth(size*colonne+colonne*2);
+		primaryStage.setWidth(size*colonne+20);
     	return true;
     }
 
@@ -126,11 +149,20 @@ public class CampoMinatoApplication extends Application {
 		}
 	}
 
+	public static void resetValuesToDefault(){
+    	colonne = 10;
+    	righe = 12;
+	}
 
 	public MatriceCampoMinato getMatriceCampoMinato() {
 		return matriceCampoMinato;
 	}
 
+	public Scene getActualScene(){return primaryStage.getScene();}
+
+	public Stage getStage(){return primaryStage;}
+
+	public static int getBombs(){return bombs;}
 
 	public static int getColonne() {
 		return colonne;
@@ -194,6 +226,8 @@ public class CampoMinatoApplication extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+
 
 //	public Scene getMainMenuGame() {
 //		return mainMenuGame;

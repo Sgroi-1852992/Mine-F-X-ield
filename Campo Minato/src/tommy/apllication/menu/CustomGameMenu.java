@@ -43,13 +43,7 @@ public class CustomGameMenu extends Menu implements Playable, Backable{
     }
 
     private void setUpButtons(){
-        play.setOnMouseClicked(m ->{
-            CampoMinatoApplication.setRighe(spinnerHeight.getValue());
-            CampoMinatoApplication.setColonne(spinnerWidth.getValue());
-            CampoMinatoApplication.setBombs(spinnerBombs.getValue());
-
-            app.initGame();
-        });
+        play.setOnMouseClicked(m ->startGame(spinnerBombs.getValue()));
 
         back.setOnMouseClicked(m -> back());
 
@@ -66,9 +60,9 @@ public class CustomGameMenu extends Menu implements Playable, Backable{
     protected void addVboxToPane() {
         HBox hBox = new HBox(20);
 
-        spinnerWidth = buildSpinner(2, 100, 10, 75, (int) rows.getHeightMenuButton());
-        spinnerHeight = buildSpinner(2, 100, 10, 75, (int) rows.getHeightMenuButton());
-        spinnerBombs = buildSpinner(1, 999, 10, 75, (int) rows.getHeightMenuButton());
+        spinnerWidth = buildSpinner(2, 25, 10, 75, (int) rows.getHeightMenuButton());
+        spinnerHeight = buildSpinner(2, 25, 10, 75, (int) rows.getHeightMenuButton());
+        spinnerBombs = buildSpinner(1, 624, 10, 75, (int) rows.getHeightMenuButton());
 
         setValueAtMaxPossible(spinnerHeight, spinnerHeight, spinnerWidth, spinnerBombs);
         setValueAtMaxPossible(spinnerWidth, spinnerHeight, spinnerWidth, spinnerBombs);
@@ -95,6 +89,14 @@ public class CustomGameMenu extends Menu implements Playable, Backable{
 
     @Override
     public void back() {app.setMainMenuGameScene();}
+
+    @Override
+    public void startGame(int bombs){
+        CampoMinatoApplication.setRighe(spinnerHeight.getValue());
+        CampoMinatoApplication.setColonne(spinnerWidth.getValue());
+        CampoMinatoApplication.setBombs(spinnerBombs.getValue());
+        app.initGame();
+    }
 
     private class CustomMenuButton extends MenuButton{
         public CustomMenuButton(String text){
