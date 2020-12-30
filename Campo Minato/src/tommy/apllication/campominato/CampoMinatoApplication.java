@@ -9,15 +9,11 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.Mnemonic;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,8 +30,6 @@ public class CampoMinatoApplication extends Application {
     private static int righe;
     private static int bombs;
 
-    private StackPane mainMenu;
-	private Slider difficulty;
 
 	private Scene mainMenuGame;
 	private Scene difficultyMenu;
@@ -182,10 +176,6 @@ public class CampoMinatoApplication extends Application {
 
 	public static void setBombs(int b){
     	bombs = b;
-	}
-
-	public StackPane getMainMenu() {
-		return mainMenu;
 	}
 
 	public void setMainMenuGameScene() {
