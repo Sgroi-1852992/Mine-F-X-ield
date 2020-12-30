@@ -27,7 +27,10 @@ public class MatriceCampoMinato {
         this.firstChoose=true;
     }
 
-    public void scopriCasella(int colonna, int riga) throws BombException, WinException {
+    public void scopriCasella(Casella casella) throws BombException, WinException {
+        int colonna = casella.getCoordinate().getX();
+        int riga = casella.getCoordinate().getY();
+
         Casella c = matriceCampoMinato[riga][colonna];
         if(firstChoose) generateBombs(c);
 
@@ -35,10 +38,10 @@ public class MatriceCampoMinato {
         {
             c.setDisable(true);
             c.setText("");
-            Casella[] caselle = getsurroundingBoxes(colonna, riga);
-            for(Casella casella: caselle)
-                if(casella!=null && !casella.isDisable())
-                    scopriCasella(casella.getCoordinate().getX(), casella.getCoordinate().getY());
+            Casella[] caselle = getsurroundingBoxes(casella);
+            for(Casella casellaNext: caselle)
+                if(casellaNext!=null && !casellaNext.isDisable())
+                    scopriCasella(casellaNext);
         }
         else if(c.getStatus()>0)
         {
@@ -68,101 +71,51 @@ public class MatriceCampoMinato {
             Casella casella = freeBoxes.get(toRemove);
             casella.setStatus(-1);
             freeBoxes.remove(toRemove);
-            incrementSurroundingBoxes(casella.getCoordinate());
+            incrementSurroundingBoxes(casella);
             bombPlaced++;
         }
 
     }
 
-    public void incrementSurroundingBoxes(Coordinate coordinate){
-        int column = coordinate.getX();
-        int row = coordinate.getY();
-
-        for(Casella c: getsurroundingBoxes(column, row))
+    public void incrementSurroundingBoxes(Casella casella){
+        for(Casella c: getsurroundingBoxes(casella))
             if(c!=null) c.incrementStatus();
     }
 
-    public Casella[] getsurroundingBoxes(int column, int riga){
+    public Casella[] getsurroundingBoxes(Casella casella){
+        int column = casella.getCoordinate().getX();
+        int riga = casella.getCoordinate().getY();
+
         Casella[] caselle = new Casella[8];
-        try //incrementa in alto a sx
-        {
-            caselle[0] = matriceCampoMinato[riga-1][column-1];
-        }
-        catch(IndexOutOfBoundsException i)
-        {
-            //guess we were at the border
-            caselle[0] = null;
-        }
+            // ttt
+            // tXt
+            // ttt
+            int[] points = new int[] {
+                    -1, -1,
+                    -1, 0,
+                    -1, 1,
+                    0, -1,
+                    0, 1,
+                    1, -1,
+                    1, 0,
+                    1, 1
+            };
 
-        try //incrementa in alto
-        {
-            caselle[1] =matriceCampoMinato[riga-1][column];
-        }
-        catch(IndexOutOfBoundsException i)
-        {
-            //guess we were at the border
-            caselle[1] = null;
-        }
+            for (int i = 0, x = 0; i < points.length; i++, x++)
+            {
+                int dx = points[i];
+                int dy = points[++i];
 
-        try //incrementa in alto a dx
-        {
-            caselle[2] =matriceCampoMinato[riga-1][column+1];
-        }
-        catch(IndexOutOfBoundsException i)
-        {
-            //guess we were at the border
-            caselle[2] = null;
-        }
-        try //incrementa a sx
-        {
-            caselle[3] =matriceCampoMinato[riga][column-1];
-        }
-        catch(IndexOutOfBoundsException i)
-        {
-            //guess we were at the border
-            caselle[3] = null;
-        }
-        try //incrementa a dx
-        {
-            caselle[4] =matriceCampoMinato[riga][column+1];
-        }
-        catch(IndexOutOfBoundsException i)
-        {
-            //guess we were at the border
-            caselle[4] = null;
-        }
+                int newX = column + dx;
+                int newY = riga + dy;
 
-        try //incrementa in basso a sx
-        {
-            caselle[5] =matriceCampoMinato[riga+1][column-1];
-        }
-        catch(IndexOutOfBoundsException i)
-        {
-            //guess we were at the border
-            caselle[5] = null;
-        }
+                if (newX >= 0 && newX < matriceCampoMinato[0].length
+                        && newY >= 0 && newY < matriceCampoMinato.length)
+                    caselle[x] = matriceCampoMinato[newY][newX];
+            }
 
-        try //incrementa in basso
-        {
-            caselle[6] =matriceCampoMinato[riga+1][column];
+            return caselle;
         }
-        catch(IndexOutOfBoundsException i)
-        {
-            //guess we were at the border
-            caselle[6] = null;
-        }
-
-        try //incrementa in basso a dx
-        {
-            caselle[7] =matriceCampoMinato[riga+1][column+1];
-        }
-        catch(IndexOutOfBoundsException i)
-        {
-            //guess we were at the border
-            caselle[7] = null;
-        }
-        return caselle;
-    }
 
     public Node setCasella(int colonna, int riga, int value){
         matriceCampoMinato[riga][colonna] = new Casella(riga, colonna, value);
@@ -225,7 +178,7 @@ public class MatriceCampoMinato {
                                 setDisable(true);
                                 try
                                 {
-                                    scopriCasella(coordinate.getX(), coordinate.getY());
+                                    scopriCasella(this);
                                 }
                                 catch (BombException e)
                                 {
