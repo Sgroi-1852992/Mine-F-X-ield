@@ -1,13 +1,20 @@
 package tommy.apllication.menu;
 
+<<<<<<< HEAD
 import javafx.event.EventType;
+=======
+>>>>>>> 0091c6b... replaced all the files with the Tom's repo and added the Game Over menu.
 import javafx.scene.image.ImageView;
 import tommy.apllication.campominato.CampoMinatoApplication;
 import tommy.apllication.menu.children.MenuButton;
 
+<<<<<<< HEAD
 import java.awt.event.MouseEvent;
 
 public class DifficultyMenu extends Menu {
+=======
+public class DifficultyMenu extends Menu implements Playable, Backable{
+>>>>>>> 0091c6b... replaced all the files with the Tom's repo and added the Game Over menu.
 
     private enum Difficulty{
 
@@ -37,6 +44,7 @@ public class DifficultyMenu extends Menu {
     }
 
     protected void setUpButtons(){
+<<<<<<< HEAD
         easy.setOnMouseClicked(m-> {
             CampoMinatoApplication.setBombs(Difficulty.EASY.getBombs());
             app.initGame();
@@ -60,4 +68,23 @@ public class DifficultyMenu extends Menu {
         back.setOnMouseClicked(m-> app.setMainMenuGameScene());
     }
 
+=======
+        easy.setOnMouseClicked(m-> startGame(Difficulty.EASY.getBombs()));
+        intermediate.setOnMouseClicked(m-> startGame(Difficulty.INTERMEDIATE.getBombs()));
+        advanced.setOnMouseClicked(m-> startGame(Difficulty.ADVANCED.getBombs()));
+        expert.setOnMouseClicked(m-> startGame(Difficulty.EXPERT.getBombs()));
+        insane.setOnMouseClicked(m-> startGame(Difficulty.INSANE.getBombs()));
+        back.setOnMouseClicked(m-> back());
+    }
+
+    @Override
+    public void back() {app.setMainMenuGameScene();}
+
+    @Override
+    public void startGame(int bombs) {
+        CampoMinatoApplication.setBombs(bombs);
+        CampoMinatoApplication.resetValuesToDefault();
+        app.initGame();
+    }
+>>>>>>> 0091c6b... replaced all the files with the Tom's repo and added the Game Over menu.
 }

@@ -2,23 +2,26 @@ package tommy.apllication.gridandbox;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import tommy.apllication.campominato.CampoMinatoApplication;
 import tommy.apllication.exception.BombException;
 import tommy.apllication.exception.WinException;
 import tommy.apllication.menu.GameOverMenu;
 
+import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MatriceCampoMinato {
     private Casella[][] matriceCampoMinato;
     private int bombs, caselleScoperte;
     private boolean firstChoose;
-    private CampoMinatoApplication app;
+	private CampoMinatoApplication app;
 
     public MatriceCampoMinato(int righe, int colonne, int bombs, CampoMinatoApplication app){
         matriceCampoMinato = new Casella[righe][colonne];
@@ -28,7 +31,10 @@ public class MatriceCampoMinato {
     }
 
     public void scopriCasella(int colonna, int riga) throws BombException, WinException {
+<<<<<<< HEAD
         if(firstChoose) pene(riga, colonna);
+=======
+>>>>>>> 0091c6b... replaced all the files with the Tom's repo and added the Game Over menu.
         Casella c = matriceCampoMinato[riga][colonna];
         if(firstChoose) generateBombs(c);
 
@@ -47,9 +53,9 @@ public class MatriceCampoMinato {
             c.setDisable(true);
         }
         else {
-        		new GameOverMenu().buildGameOverMenu(false, app);
-        		throw new BombException(c);
-        	};
+        	new GameOverMenu().buildGameOverMenu(false, app);
+        	throw new BombException(c);
+        };
         ++caselleScoperte;
         if(checkWin()) {
         	new GameOverMenu().buildGameOverMenu(true, app);
@@ -58,36 +64,14 @@ public class MatriceCampoMinato {
     }
 
     public boolean checkWin(){
-        return caselleScoperte==(matriceCampoMinato[0].length* matriceCampoMinato.length - bombs);
+        return caselleScoperte==(CampoMinatoApplication.getColonne()*CampoMinatoApplication.getRighe() - bombs);
     }
-    
-    private void pene(int riga, int colonna) {    	
-    	int row = matriceCampoMinato.length;
-    	int column = matriceCampoMinato[0].length;
-    	firstChoose=false;
-    	ArrayList<Integer> aa = Stream.iterate(0, x -> x + 1).limit(row*column).collect(Collectors.toCollection(ArrayList::new));
-    	aa.remove(column*(riga) + colonna);
-    	int[] bombList = new int[bombs];
-    	int bombsPlaced = 0;
-    	while(bombsPlaced++ < bombs) {
-    		int v = aa.remove((int)(Math.random()*aa.size()));
-    		int x = v%column;
-    		int y = v/column;
-    		matriceCampoMinato[y][x].setStatus(-1);
-            for(Casella c: getsurroundingBoxes(x, y))
-                if(c!=null) c.incrementStatus();
-    	}
-    	
-    }
-    /**
-     * we don't like optimization
-     * @param riga
-     * @param colonna
-     */
-    public void generateBombs(int riga, int colonna){
+
+    public void generateBombs(Casella init){
         firstChoose=false;
 
         //keep track of free spaces
+<<<<<<< HEAD
 
         LinkedList<Coordinate> freeCoordinates = new LinkedList<>();
             for (int column = 0; column < matriceCampoMinato[0].length; column++)
@@ -129,6 +113,14 @@ public class MatriceCampoMinato {
             }
             if(bombPlaced<bombs) freeCoordinates.removeAll(toRemove);
             else break;
+=======
+        LinkedList<Casella> freeBoxes = new LinkedList<>();
+        Arrays.stream(matriceCampoMinato).forEach(caselle->Arrays.stream(caselle).forEach(casella-> {if(!init.equals(casella)) freeBoxes.add(casella);}));
+
+        int bombPlaced = 0;
+        while(bombPlaced<bombs)
+        {
+>>>>>>> 0091c6b... replaced all the files with the Tom's repo and added the Game Over menu.
             int toRemove = (int)(freeBoxes.size() * Math.random());
             Casella casella = freeBoxes.get(toRemove);
             casella.setStatus(-1);
@@ -250,9 +242,20 @@ public class MatriceCampoMinato {
         return toReturn.substring(0, toReturn.length()-1);
     }
 
+    private enum Status{
+        VOID, FLAG, QUESTION_MARKER;
+    }
     public class Casella extends Button {
         private int status;
-        private double size = 35;
+        private double size = 25;
+        private final static String BOMB_URL = "/tommy/resources/images/bomb_icon.png";
+        private final static String FLAG_URL = "/tommy/resources/images/flag_icon.png";
+
+        private ImageView image;
+
+        private Status statusCasella = Status.VOID;
+
+
         /**
          * X:Colonna
          * Y:Riga
@@ -262,15 +265,19 @@ public class MatriceCampoMinato {
         public Casella(int riga, int colonna, int status){
             this(status);
             coordinate = new Coordinate(riga,colonna);
+
         }
 
         public Casella(int status){
             this.status=status;
+            setMaxSize(size, size);
+            setTextAlignment(TextAlignment.CENTER);
+            setFont(Font.font(null, FontWeight.BOLD, 12));
 
             addEventFilter(MouseEvent.MOUSE_CLICKED, (mouseEvent) -> {
                     switch (mouseEvent.getButton()) {
                         case PRIMARY: {
-                            if(!getText().equals("?") && !getText().equals("F"))
+                            if(!(getStatusCasella()==Status.QUESTION_MARKER) && !(getStatusCasella() == Status.FLAG))
                             {
                                 setDisable(true);
                                 try
@@ -279,11 +286,17 @@ public class MatriceCampoMinato {
                                 }
                                 catch (BombException e)
                                 {
+
+                                    fillImage(this, BOMB_URL);
                                     for (Casella[] caselle : matriceCampoMinato)
                                         for (Casella cas : caselle)
                                             if (!cas.isDisable())
                                             {
-                                                if (cas.getStatus() < 0) cas.setStyle("-fx-background-color: #CD5C5C;");
+                                                if (cas.getStatus() < 0)
+                                                {
+                                                    cas.setStyle("-fx-background-color: #CD5C5C;");
+                                                    fillImage(cas, BOMB_URL);
+                                                }
                                                 else
                                                 {
                                                     if(cas.getStatus()>0) cas.setText(String.valueOf(cas.getStatus()));
@@ -291,7 +304,6 @@ public class MatriceCampoMinato {
                                                 }
                                                 cas.setDisable(true);
                                             }
-                                    
                                 }
                                 catch (WinException w)
                                 {
@@ -301,6 +313,7 @@ public class MatriceCampoMinato {
                                             {
                                                 cas.setDisable(true);
                                                 cas.setStyle("-fx-background-color: #7CFC00");
+                                                fillImage(cas, BOMB_URL);
                                             }
                                 }
                             }
@@ -308,11 +321,25 @@ public class MatriceCampoMinato {
 
                         case SECONDARY: {
                             //System.out.println("X:"+this.getCoordinate().getX()+" Y:"+getCoordinate().getY());
-                            switch (getText())
+                            switch (getStatusCasella())
                             {
-                                case "F": setText("?"); break;
-                                case "?": setText(""); break;
-                                default: setText("F"); break;
+                                case FLAG:
+                                {
+                                    setGraphic(null);
+                                    setText("?");
+                                    setStatusCasella(Status.QUESTION_MARKER);
+                                } break;
+                                case QUESTION_MARKER:
+                                {
+                                    setText("");
+                                    setStatusCasella(Status.VOID);
+                                } break;
+                                default:
+                                {
+                                    setText("");
+                                    fillImage(this, FLAG_URL);
+                                    setStatusCasella(Status.FLAG);
+                                } break;
                             }
                         }; break;
                         default: break;
@@ -320,10 +347,30 @@ public class MatriceCampoMinato {
                 });
             setStyle("-fx-background-radius: 0");
             setTextFill(Color.BLACK);
+//            double max = Math.max(matriceCampoMinato.length, matriceCampoMinato[0].length);
+//            double newSize = size*max<=CampoMinatoApplication.getMaxWidthHeight()?
+//                            size: CampoMinatoApplication.getMaxWidthHeight()/max;
+//            System.out.println(newSize);
             setMinSize(size, size);
             setFocusTraversable(false);
             setTextAlignment(TextAlignment.CENTER);
 
+        }
+
+        public void fillImage(Casella cas, String url){
+            //Image bomb = new Image(getClass().getResourceAsStream("/tommy/resources/images/bomb.jpg"));
+            try(InputStream is = getClass().getResourceAsStream(url);)
+            {
+                ImageView image = new ImageView(new Image(is));
+                image.setFitHeight(size);
+                image.setFitWidth(size);
+                cas.setGraphic(image);
+                this.image = image;
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
 
         public int getStatus(){return status;}
@@ -340,7 +387,11 @@ public class MatriceCampoMinato {
                 status++;
         }
 
-         @Override
+        public double getSize() {
+            return size;
+        }
+
+        @Override
         public boolean equals(Object o){
              if (this == o) return true;
              if (o == null || getClass() != o.getClass()) return false;
@@ -351,6 +402,14 @@ public class MatriceCampoMinato {
         @Override
         public int hashCode() {
             return Objects.hash(status, size, coordinate);
+        }
+
+        public Status getStatusCasella() {
+            return statusCasella;
+        }
+
+        public void setStatusCasella(Status status){
+            this.statusCasella = status;
         }
     }
 
