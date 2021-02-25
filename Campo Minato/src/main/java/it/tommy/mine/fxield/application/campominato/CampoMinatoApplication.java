@@ -80,40 +80,36 @@ public class CampoMinatoApplication extends Application {
         HBox hbox = new HBox();
         for(int x = 0; x<this.colonne; x++) hbox.getChildren().add(new VBox(generateNodes(x)));
 
-//        //FOR TESTING PURPOSE {
-//        Button apritutto = new Button("ApriTutto");
-//        apritutto.addEventFilter(MouseEvent.MOUSE_CLICKED, (mouseEvent)->{
-//            for(MatriceCampoMinato.Casella[] m: matriceCampoMinato.getMatriceCampoMinato())
-//                for(MatriceCampoMinato.Casella c: m)
-//                    c.setText(String.valueOf(c.getStatus()));
-//        });
-//        hbox.getChildren().add(0, apritutto);
-//        //FOR TESTING PURPOSE }
-
 		hbox.setAlignment(Pos.CENTER);
 		Group grid = new Group(hbox);
 		Scene matrix = new Scene(grid);
+		Stage gameStage = new Stage();
 
 		matrix.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			double height = primaryStage.getHeight();
-			double width = primaryStage.getWidth();
+//			double height = primaryStage.getHeight();
+//			double width = primaryStage.getWidth();
 			@Override
 			public void handle(KeyEvent keyEvent) {
 				if(keyEvent.getCode() == KeyCode.ESCAPE || keyEvent.getCode() == KeyCode.ENTER)
 				{
-					primaryStage.setHeight(height);
-					primaryStage.setWidth(width);
+//					primaryStage.setHeight(height);
+//					primaryStage.setWidth(width);
 					setMainMenuGameScene();
 				}
 			}
 		});
-		primaryStage.setScene(matrix);
+		gameStage.setScene(matrix);
 		MatriceCampoMinato.Casella b = (MatriceCampoMinato.Casella) ((Parent)hbox.getChildren().get(0)).getChildrenUnmodifiable().get(0);
 		double size = b.getSize();
 //		primaryStage.setHeight(size*righe+righe*2);
-		primaryStage.setHeight(size*righe+44);
+		gameStage.setHeight(size*righe+44);
 //		primaryStage.setWidth(size*colonne+colonne*2);
-		primaryStage.setWidth(size*colonne+20);
+		gameStage.setWidth(size*colonne+20);
+
+		gameStage.setOnCloseRequest(e->primaryStage.show());
+
+		gameStage.show();
+		primaryStage.hide();
     	return true;
     }
 
