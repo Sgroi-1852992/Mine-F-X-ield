@@ -2,7 +2,8 @@ package it.tommy.mine.fxield.application.menu;
 
 import it.tommy.mine.fxield.application.campominato.CampoMinatoApplication;
 import javafx.scene.image.ImageView;
-import tommy.apllication.menu.children.MenuButton;
+import it.tommy.mine.fxield.application.menu.children.MenuButton;
+
 
 public class MainMenu extends Menu {
     private MenuButton play = new MenuButton("PLAY");

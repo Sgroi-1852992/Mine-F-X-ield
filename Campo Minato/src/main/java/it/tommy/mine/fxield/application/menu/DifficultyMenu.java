@@ -2,7 +2,7 @@ package it.tommy.mine.fxield.application.menu;
 
 import it.tommy.mine.fxield.application.campominato.CampoMinatoApplication;
 import javafx.scene.image.ImageView;
-import tommy.apllication.menu.children.MenuButton;
+import it.tommy.mine.fxield.application.menu.children.MenuButton;
 
 public class DifficultyMenu extends Menu implements Playable, Backable{
 

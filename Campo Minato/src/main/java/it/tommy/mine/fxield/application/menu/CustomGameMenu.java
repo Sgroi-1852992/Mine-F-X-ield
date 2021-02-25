@@ -1,11 +1,11 @@
 package it.tommy.mine.fxield.application.menu;
 
 import it.tommy.mine.fxield.application.campominato.CampoMinatoApplication;
+import it.tommy.mine.fxield.application.menu.children.MenuButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import tommy.apllication.menu.children.MenuButton;
 
 public class CustomGameMenu extends Menu implements Playable, Backable{
 
@@ -82,7 +82,7 @@ public class CustomGameMenu extends Menu implements Playable, Backable{
         app.initGame();
     }
 
-    private class CustomMenuButton extends MenuButton{
+    private class CustomMenuButton extends MenuButton {
         public CustomMenuButton(String text){
             super(text, 150, 30);
         }

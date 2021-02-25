@@ -1,4 +1,4 @@
-package tommy.apllication.menu.children;
+package it.tommy.mine.fxield.application.menu.children;
 
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
