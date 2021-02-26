@@ -108,6 +108,8 @@ public class CampoMinatoApplication extends Application {
 
 		gameStage.setOnCloseRequest(e->primaryStage.show());
 
+		gameStage.setTitle("Matrix "+matriceCampoMinato.getMatriceCampoMinato().length+"x"+matriceCampoMinato.getMatriceCampoMinato()[0].length+" - bombs: "+matriceCampoMinato.getBombsNumber());
+		gameStage.setResizable(false);
 		gameStage.show();
 		primaryStage.hide();
     	return true;
@@ -120,6 +122,7 @@ public class CampoMinatoApplication extends Application {
     }
 
     public Image setBackground(){
+
 		try(InputStream is = getClass().getResourceAsStream("/minefield.jpg");)
 		{
 			return new Image(is);
